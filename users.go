@@ -5,38 +5,78 @@ import (
 	"net/http"
 )
 
-func (c *Client) CurrentUserInfo() (UserInfoResponse, error) {
+func (c *Client) CurrentUserInfo() (User, error) {
+	// Returns the current user information
 
 	// Make Request
 	body, err := c.makeRequest(http.MethodGet, "/v2/public/user/info", "")
 	if err != nil {
-		return UserInfoResponse{}, err
+		return User{}, err
 	}
 
 	// Unmarshal Response
-	resp := UserInfoResponse{}
+	resp := User{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
-		return UserInfoResponse{}, err
+		return User{}, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) ListUsers() (UserListResponse, error) {
+func (c *Client) ListUsers() (UserList, error) {
+	// Lists All Standard Users (non-Domain Admins)
 
 	// Make Request
 	body, err := c.makeRequest(http.MethodGet, "/v2/public/users/list", nil)
 	if err != nil {
-		return UserListResponse{TotalCount: 0, Users: []UserListItem{}}, err
+		return UserList{TotalCount: 0, Users: []User{}}, err
 	}
 
 	// Unmarshal Response
-	resp := UserListResponse{}
+	resp := UserList{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
-		return UserListResponse{TotalCount: 0, Users: []UserListItem{}}, err
+		return UserList{TotalCount: 0, Users: []User{}}, err
 	}
 
 	return resp, nil
+}
+
+func (c *Client) CreateUser(user NewUser) (User, error) {
+	resp := User{}
+	return resp, nil
+}
+
+func (c *Client) CreateAPIUser(user APIUser) (User, error) {
+	resp := User{}
+	return resp, nil
+}
+
+func (c *Client) CreateSAMLUser(user SAMLUser) (User, error) {
+	resp := User{}
+	return resp, nil
+}
+
+func (c *Client) DeleteUser(resource_id string) error {
+	return nil
+}
+
+func (c *Client) Get2FAStatus(user_id int) (MFAStatus, error) {
+	resp := MFAStatus{}
+	return resp, nil
+}
+
+func (c *Client) Enable2FA() (OTPSecret, error) {
+	resp := OTPSecret{}
+	return resp, nil
+}
+
+func (c *Client) Disable2FA(user_id int) error {
+	return nil
+}
+
+func (c *Client) ConvertUserToAPIUser(user_id int) (string, error) {
+	key := ""
+	return key, nil
 }
