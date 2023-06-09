@@ -80,3 +80,11 @@ func (c *Client) ConvertUserToAPIUser(user_id int) (string, error) {
 	key := ""
 	return key, nil
 }
+
+func (c *Client) UpdateConsoleAccessDeniedFlag(user_id string, console_access_denied bool) error {
+	return nil
+}
+
+func (c *Client) DeactivateAPIKeys(user_id string) error {
+	return nil
+}
