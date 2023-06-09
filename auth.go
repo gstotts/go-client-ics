@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
+	"regexp"
 )
 
 // AuthStruct
@@ -72,6 +72,6 @@ func (c *Client) CreateAPIKey(key_length int) (string, error) {
 
 	// Remove quotes around response Body
 	// Response is not valid json, just a quoted string as of version 23.6.6
-	key := strings.ReplaceAll(string(body), "\"", "")
+	key := regexp.MustCompile(`[^a-zA-Z0-9 ]+`).ReplaceAllString(string(body), "")
 	return key, nil
 }
