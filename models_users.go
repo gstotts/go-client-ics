@@ -1,6 +1,6 @@
 package insightcloudsecClient
 
-type NewUser struct {
+type newUser struct {
 	Name         string `json:"name"`
 	EmailAddress string `json:"email"`
 	Username     string `json:"username"`
@@ -8,30 +8,30 @@ type NewUser struct {
 }
 
 type LocalUser struct {
-	NewUser
+	newUser
 	Password          string `json:"password"`
 	TwoFactorRequired bool   `json:"two_factor_required"`
 }
 
 type APIUser struct {
-	NewUser
+	newUser
 	ExpirationDate int64 `json:"expiration_date"`
 }
 
 type SAMLUser struct {
-	NewUser
+	newUser
 	Domain                 string
 	AuthenticationServerID int `json:"authentication_server_id"`
 }
 
 type SAMLUserCreateRequest struct {
-	NewUser
+	newUser
 	AuthenticationType string `json:"authentication_type"`
 }
 
 // UserCreateRequest
 type UserCreateRequest struct {
-	NewUser
+	newUser
 	ConfirmPassword string `json:"confirm_password"`
 }
 

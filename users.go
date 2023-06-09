@@ -2,6 +2,7 @@ package insightcloudsecClient
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -9,7 +10,7 @@ func (c *Client) CurrentUserInfo() (User, error) {
 	// Returns the current user information
 
 	// Make Request
-	body, err := c.makeRequest(http.MethodGet, "/v2/public/user/info", "")
+	body, err := c.makeRequest(http.MethodGet, "/v2/public/user/info", nil)
 	if err != nil {
 		return User{}, err
 	}
@@ -43,8 +44,29 @@ func (c *Client) ListUsers() (UserList, error) {
 	return resp, nil
 }
 
-func (c *Client) CreateUser(user NewUser) (User, error) {
+func (c *Client) CreateUser(user LocalUser) (User, error) {
+	// Creates an InsightCloudSec User account
+
+	if user.Name == "" || user.AccessLevel == "" || user.EmailAddress == "" || user.Password == "" || user.Username == "" {
+		return User{}, fmt.Errorf("must set user's name, emailaddress, password, username and accesslevel")
+	}
+
+	// Make Request
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create", UserCreateRequest{
+		newUser:         user.newUser,
+		ConfirmPassword: user.Password,
+	})
+	if err != nil {
+		return User{}, err
+	}
+
+	// Unmarshal Response
 	resp := User{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return User{}, nil
+	}
+
 	return resp, nil
 }
 
