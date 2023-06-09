@@ -1,1 +1,1 @@
-# insightcloudsec-client-go
+# go-client-ics
