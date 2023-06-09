@@ -1,37 +1,39 @@
 package insightcloudsecClient
 
-type newUser struct {
-	Name         string `json:"name"`
-	EmailAddress string `json:"email"`
-	Username     string `json:"username"`
-	AccessLevel  string `json:"access_level,omitempty"`
-}
-
+// LocalUser
 type LocalUser struct {
-	newUser
+	Name              string `json:"name"`
+	EmailAddress      string `json:"email"`
+	Username          string `json:"username"`
+	AccessLevel       string `json:"access_level,omitempty"`
 	Password          string `json:"password"`
 	TwoFactorRequired bool   `json:"two_factor_required"`
 }
 
+// APIUser
 type APIUser struct {
-	newUser
-	ExpirationDate int64 `json:"expiration_date"`
+	Name           string `json:"name"`
+	EmailAddress   string `json:"email"`
+	Username       string `json:"username"`
+	ExpirationDate int64  `json:"expiration_date"`
 }
 
+// SAMLUser
 type SAMLUser struct {
-	newUser
+	Name                   string `json:"name"`
+	EmailAddress           string `json:"email"`
+	Username               string `json:"username"`
+	AccessLevel            string `json:"access_level,omitempty"`
 	Domain                 string
 	AuthenticationServerID int `json:"authentication_server_id"`
 }
 
-type SAMLUserCreateRequest struct {
-	newUser
-	AuthenticationType string `json:"authentication_type"`
-}
-
 // UserCreateRequest
-type UserCreateRequest struct {
-	newUser
+type userCreateRequest struct {
+	Name            string `json:"name"`
+	EmailAddress    string `json:"email"`
+	Username        string `json:"username"`
+	AccessLevel     string `json:"access_level,omitempty"`
 	ConfirmPassword string `json:"confirm_password"`
 }
 
