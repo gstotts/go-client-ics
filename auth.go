@@ -73,13 +73,5 @@ func (c *Client) CreateAPIKey(key_length int) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	// Unmarshal Response
-	resp := ApikeyResponse{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return "", err
-	}
-
-	return resp.APIKey, nil
+	return string(body), nil
 }
