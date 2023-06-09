@@ -37,27 +37,27 @@ type ApikeyResponse struct {
 }
 
 // Login to InsightCloudSec
-func (c *Client) Login() (*AuthResponse, error) {
+func (c *Client) Login() (AuthResponse, error) {
 
 	// Verify AuthStruct is not blank
 	if c.Auth.Username == "" || c.Auth.Password == "" {
-		return nil, fmt.Errorf("missing username and/or password")
+		return AuthResponse{}, fmt.Errorf("missing username and/or password")
 	}
 
 	// Make login request
 	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/login", c.Auth)
 	if err != nil {
-		return nil, err
+		return AuthResponse{}, err
 	}
 
 	// Unmarshal Data
 	resp := AuthResponse{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
-		return nil, err
+		return AuthResponse{}, err
 	}
 
-	return &resp, nil
+	return resp, nil
 }
 
 func (c *Client) CreateAPIKey(key_length int) (string, error) {

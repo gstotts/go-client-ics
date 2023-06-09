@@ -60,7 +60,7 @@ func NewClient(host, username, password, apikey *string) (*Client, error) {
 
 	// Set sessionID token
 	c.Token = resp.SessionID
-	c.UserDetails = *resp
+	c.UserDetails = resp
 
 	// Return the Client and no error
 	return &c, nil
