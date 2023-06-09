@@ -51,10 +51,19 @@ func (c *Client) CreateUser(user LocalUser) (User, error) {
 		return User{}, fmt.Errorf("must set user's name, emailaddress, password, username and accesslevel")
 	}
 
+	if !isValidAccessLevel(user.AccessLevel) {
+		return User{}, fmt.Errorf("accesslevel must be one of: BASIC_USER, ORGANIZATION_ADMIN, DOMAIN_VIEWER, or DOMAIN_ADMIN")
+	}
+
 	// Make Request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create", UserCreateRequest{
-		newUser:         user.newUser,
-		ConfirmPassword: user.Password,
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create", userCreateRequest{
+		Name:              user.Name,
+		EmailAddress:      user.EmailAddress,
+		Username:          user.Username,
+		AccessLevel:       user.AccessLevel,
+		Password:          user.Password,
+		TwoFactorRequired: user.TwoFactorRequired,
+		ConfirmPassword:   user.Password,
 	})
 	if err != nil {
 		return User{}, err
@@ -109,4 +118,19 @@ func (c *Client) UpdateConsoleAccessDeniedFlag(user_id string, console_access_de
 
 func (c *Client) DeactivateAPIKeys(user_id string) error {
 	return nil
+}
+
+func isValidAccessLevel(level string) bool {
+	switch level {
+	case "BASIC_USER":
+		return true
+	case "ORGANIZATION_ADMIN":
+		return true
+	case "DOMAIN_VIEWER":
+		return true
+	case "DOMAIN_ADMIN":
+		return true
+	default:
+		return false
+	}
 }

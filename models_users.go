@@ -30,11 +30,13 @@ type SAMLUser struct {
 
 // UserCreateRequest
 type userCreateRequest struct {
-	Name            string `json:"name"`
-	EmailAddress    string `json:"email"`
-	Username        string `json:"username"`
-	AccessLevel     string `json:"access_level,omitempty"`
-	ConfirmPassword string `json:"confirm_password"`
+	Name              string `json:"name"`
+	EmailAddress      string `json:"email"`
+	Username          string `json:"username"`
+	AccessLevel       string `json:"access_level,omitempty"`
+	Password          string `json:"password"`
+	TwoFactorRequired bool   `json:"two_factor_required"`
+	ConfirmPassword   string `json:"confirm_password"`
 }
 
 // User
