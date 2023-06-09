@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 // AuthStruct
@@ -29,11 +30,6 @@ type AuthResponse struct {
 type ApikeyRequest struct {
 	UserID    string `json:"user_id"`
 	KeyLength int32  `json:"key_length"`
-}
-
-// ApikeyResponse
-type ApikeyResponse struct {
-	APIKey string `json:"apikey"`
 }
 
 // Login to InsightCloudSec
@@ -73,5 +69,9 @@ func (c *Client) CreateAPIKey(key_length int) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(body), nil
+
+	// Remove quotes around response Body
+	// Response is not valid json, just a quoted string as of version 23.6.6
+	key := strings.ReplaceAll(string(body), "\"", "")
+	return key, nil
 }
