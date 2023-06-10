@@ -191,13 +191,70 @@ func TestUsers_CreateUser_NoName(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
 	})
+
+	_, err := client.CreateUser(LocalUser{
+		EmailAddress:      "boat@boatface.com",
+		Username:          "Boatface",
+		AccessLevel:       "BASIC_USER",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
 	teardown()
 }
 
-func TestUsers_CreateUser_NoEmail(t *testing.T) {}
+func TestUsers_CreateUser_NoEmail(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
 
-func TestUsers_CreateUser_NoPassword(t *testing.T) {}
+	_, err := client.CreateUser(LocalUser{
+		Name:              "Boaty McBoatface",
+		Username:          "Boatface",
+		AccessLevel:       "BASIC_USER",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
+	teardown()
+}
 
-func TestUsers_CreateUser_NoUsername(t *testing.T) {}
+func TestUsers_CreateUser_NoUsername(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
 
-func TestUsers_CreateUser_BadAccessLevel(t *testing.T) {}
+	_, err := client.CreateUser(LocalUser{
+		Name:              "Boaty McBoatface",
+		EmailAddress:      "boat@boatface.com",
+		AccessLevel:       "BASIC_USER",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateUser_BadAccessLevel(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
+
+	_, err := client.CreateUser(LocalUser{
+		Name:              "Boaty McBoatface",
+		EmailAddress:      "boat@boatface.com",
+		AccessLevel:       "GOD_MODE",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
+	teardown()
+}
