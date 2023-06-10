@@ -23,7 +23,7 @@ func TestUsers_CurrentUserInfo(t *testing.T) {
 	assert.Equal(t, "Han Solo", resp.Name)
 	assert.Equal(t, 123, resp.UserID)
 	assert.Equal(t, false, resp.OrganizationAdmin)
-	assert.Equal(t, true, resp.DomainAdmin)
+	assert.Equal(t, false, resp.DomainAdmin)
 	assert.Equal(t, false, resp.DomainViewer)
 	assert.Equal(t, "han_solo@mfalcon.com", resp.EmailAddress)
 	assert.Equal(t, "han_solo", resp.Username)
