@@ -148,7 +148,7 @@ func TestUsers_CreateUser(t *testing.T) {
 		fmt.Fprint(w, getJSONFile("users/create_user_admin_details_response.json"))
 	})
 
-	_, err := client.CreateUser(LocalUser{
+	resp, err := client.CreateUser(LocalUser{
 		Name:              "Boaty McBoatFace",
 		EmailAddress:      "boat@boatface.com",
 		Username:          "Boatface",
@@ -156,6 +156,31 @@ func TestUsers_CreateUser(t *testing.T) {
 		TwoFactorRequired: false,
 	})
 	assert.NoError(t, err)
+	assert.Equal(t, false, resp.DomainViewer)
+	assert.Equal(t, "boat@boatface.com", resp.EmailAddress)
+	assert.Equal(t, 1, resp.OrganizationID)
+	assert.Equal(t, 3600, resp.SessionTimeoutSeconds)
+	assert.Equal(t, true, resp.RequirePWReset)
+	assert.Equal(t, "divvyuser:23:", resp.ResourceID)
+	assert.Equal(t, "Boaty McBoatFace", resp.Name)
+	assert.Equal(t, 23, resp.UserID)
+	assert.Equal(t, true, resp.TwoFactorEnabled)
+	assert.Equal(t, "local", resp.Auth)
+	assert.Equal(t, "2023/01/01, 01:01:01 UTC", resp.SessionExpiration)
+	assert.Equal(t, 1, resp.AuthenticationServerID)
+	assert.Equal(t, false, resp.OrganizationAdmin)
+	assert.Equal(t, false, resp.DomainAdmin)
+	assert.Equal(t, "Default Organization", resp.OrganizationName)
+	assert.Equal(t, false, resp.TwoFactorRequired)
+	assert.Equal(t, 3600, resp.SessionTTL)
+	assert.Equal(t, "2022-01-02 12:34:56", resp.CreateDate)
+	assert.Equal(t, "1a2bcd3e-45fg-67hi-jklm-8o9p1q2r3st4u", resp.AWSDefaultExternalID)
+	assert.Equal(t, false, resp.ApiKeyGenerationAllowed)
+	assert.Equal(t, "Boatface", resp.Username)
+	assert.Equal(t, false, resp.AuthPluginExists)
+	assert.Equal(t, make([]string, 0), resp.NavigationBlacklist)
+	assert.Equal(t, "divvy-light-theme", resp.Theme)
+	assert.Equal(t, "", resp.Rapid7OrgID)
 }
 
 func TestUsers_CreateUser_NoName(t *testing.T) {
