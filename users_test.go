@@ -141,6 +141,12 @@ func TestUsers_CreateUser(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, getJSONFile("users/create_user_details_response.json"))
 	})
+	mux.HandleFunc("/v2/prototype/domains/admins/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_admin_details_response.json"))
+	})
 
 	_, err := client.CreateUser(LocalUser{
 		Name:              "Boaty McBoatFace",

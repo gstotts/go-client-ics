@@ -1,11 +1,11 @@
 {
     "users": [
         {
-            "resource_id": "divvyuser:4:",
+            "resource_id": "divvyuser:23:",
             "name": "Boaty McBoatFace",
-            "user_id": 4,
+            "user_id": 23,
             "organization_admin": false,
-            "domain_admin": true,
+            "domain_admin": false,
             "domain_viewer": false,
             "email_address": "boat@boatface.com",
             "username": "Boatface",
@@ -28,5 +28,5 @@
             "rapid7_org_id": ""
         }
     ],
-    "total_count": 3
+    "total_count": 1
 }
