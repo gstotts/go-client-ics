@@ -25,11 +25,11 @@ func (c *Client) CurrentUserInfo() (User, error) {
 	return resp, nil
 }
 
-func (c *Client) getUsers(url string) (UserList, error) {
+func (c *Client) getUsers(method, url string) (UserList, error) {
 	// Makes GET to Users API and Returns User List
 
 	// Make Request
-	body, err := c.makeRequest(http.MethodGet, url, nil)
+	body, err := c.makeRequest(method, url, nil)
 	if err != nil {
 		return UserList{TotalCount: 0, Users: []User{}}, err
 	}
@@ -47,14 +47,14 @@ func (c *Client) getUsers(url string) (UserList, error) {
 func (c *Client) ListBasicUsers() (UserList, error) {
 	// Lists All Standard Users (non-Domain Admins)
 
-	users, err := c.getUsers("/v2/public/users/list")
+	users, err := c.getUsers(http.MethodGet, "/v2/public/users/list")
 	return users, err
 }
 
 func (c *Client) ListAdmins() (UserList, error) {
 	// List Admin Users
 
-	users, err := c.getUsers("/v2/prototype/domains/admins/list")
+	users, err := c.getUsers(http.MethodPost, "/v2/prototype/domains/admins/list")
 	users.TotalCount = len(users.Users)
 	return users, err
 }
