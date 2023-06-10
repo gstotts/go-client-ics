@@ -76,6 +76,8 @@ type User struct {
 	OwnedResources                 int      `json:"owned_resources,omitempty"`
 	ServerName                     string   `json:"server_name,omitempty"`
 	Suspended                      bool     `json:"suspended,omitempty"`
+	TempPW                         string   `json:"temporary_pw,omitempty"`
+	TempPWExpiration               string   `json:"temp_pw_expiration,omitempty"`
 }
 
 // UserList

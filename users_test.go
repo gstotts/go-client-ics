@@ -47,7 +47,7 @@ func TestUsers_CurrentUserInfo(t *testing.T) {
 	teardown()
 }
 
-func TestUsers_ListUsers(t *testing.T) {
+func TestUsers_ListBasicUsers(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/users/list", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
@@ -56,7 +56,7 @@ func TestUsers_ListUsers(t *testing.T) {
 		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
 	})
 
-	resp, err := client.ListUsers()
+	resp, err := client.ListBasicUsers()
 	assert.NoError(t, err)
 	assert.Equal(t, false, resp.Users[0].DomainViewer)
 	assert.Equal(t, 1, resp.Users[0].OrganizationID)
@@ -126,3 +126,23 @@ func TestUsers_ListUsers(t *testing.T) {
 	assert.Equal(t, 3, resp.TotalCount)
 	teardown()
 }
+
+func TestUsers_CreateUser(t *testing.T) {}
+
+func TestUsers_CreateUser_NoName(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
+}
+
+func TestUsers_CreateUser_NoEmail(t *testing.T) {}
+
+func TestUsers_CreateUser_NoPassword(t *testing.T) {}
+
+func TestUsers_CreateUser_NoUsername(t *testing.T) {}
+
+func TestUsers_CreateUser_BadAccessLevel(t *testing.T) {}

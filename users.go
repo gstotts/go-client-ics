@@ -25,11 +25,11 @@ func (c *Client) CurrentUserInfo() (User, error) {
 	return resp, nil
 }
 
-func (c *Client) ListUsers() (UserList, error) {
-	// Lists All Standard Users (non-Domain Admins)
+func (c *Client) getUsers(url string) (UserList, error) {
+	// Makes GET to Users API and Returns User List
 
 	// Make Request
-	body, err := c.makeRequest(http.MethodGet, "/v2/public/users/list", nil)
+	body, err := c.makeRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return UserList{TotalCount: 0, Users: []User{}}, err
 	}
@@ -39,6 +39,93 @@ func (c *Client) ListUsers() (UserList, error) {
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return UserList{TotalCount: 0, Users: []User{}}, err
+	}
+
+	return resp, nil
+}
+
+func (c *Client) ListBasicUsers() (UserList, error) {
+	// Lists All Standard Users (non-Domain Admins)
+
+	users, err := c.getUsers("/v2/public/users/list")
+	return users, err
+}
+
+func (c *Client) ListAdmins() (UserList, error) {
+	// List Admin Users
+
+	users, err := c.getUsers("/v2/prototype/domains/admins/list")
+	return users, err
+}
+
+func (c *Client) ListUsers() (UserList, error) {
+	// List All Users - Basic and Admin
+
+	basic_users, err := c.ListBasicUsers()
+	if err != nil {
+		return UserList{TotalCount: 0, Users: []User{}}, nil
+	}
+
+	admins, err := c.ListAdmins()
+	if err != nil {
+		return UserList{TotalCount: 0, Users: []User{}}, nil
+	}
+
+	var combined UserList
+	combined.TotalCount = basic_users.TotalCount + admins.TotalCount
+	combined.Users = append(basic_users.Users, admins.Users...)
+
+	return combined, nil
+}
+
+func (c *Client) GetUserByUsername(username string) (User, error) {
+	// Returns the user of the given username
+
+	all_users, err := c.ListUsers()
+	if err != nil {
+		return User{}, err
+	}
+
+	for _, user := range all_users.Users {
+		if user.Username == username {
+			return user, nil
+		}
+	}
+
+	return User{}, fmt.Errorf("unable to find username %s", username)
+}
+
+func (c *Client) GetUserByID(user_id int) (User, error) {
+	// Returns the user of the given user_id
+
+	all_users, err := c.ListUsers()
+	if err != nil {
+		return User{}, err
+	}
+
+	for _, user := range all_users.Users {
+		if user.UserID == user_id {
+			return user, nil
+		}
+	}
+
+	return User{}, fmt.Errorf("unable to find user of user_id %d", user_id)
+}
+
+func (c *Client) postUser(url string, data interface{}) (User, error) {
+	// Makes POST to Users API and returns User
+
+	// Make Request
+	body, err := c.makeRequest(http.MethodPost, url, data)
+	if err != nil {
+		return User{}, err
+	}
+
+	// Unmarshal Response
+	resp := User{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return User{}, err
 	}
 
 	return resp, nil
@@ -56,7 +143,7 @@ func (c *Client) CreateUser(user LocalUser) (User, error) {
 	}
 
 	// Make Request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create", userCreateRequest{
+	user_resp, err := c.postUser("/v2/public/user/create", userCreateRequest{
 		Name:              user.Name,
 		EmailAddress:      user.EmailAddress,
 		Username:          user.Username,
@@ -69,6 +156,23 @@ func (c *Client) CreateUser(user LocalUser) (User, error) {
 		return User{}, err
 	}
 
+	details, err := c.GetUserByID(user_resp.UserID)
+	return details, err
+}
+
+func (c *Client) CreateAPIUser(user APIUser) (User, error) {
+	// Creates an InsightCloudSec API Only User account
+
+	if user.Name == "" || user.EmailAddress == "" || user.Username == "" {
+		return User{}, fmt.Errorf("must set api users's name, emailaddress, and username")
+	}
+
+	// Make Request
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create", user)
+	if err != nil {
+		return User{}, err
+	}
+
 	// Unmarshal Response
 	resp := User{}
 	err = json.Unmarshal(body, &resp)
@@ -76,11 +180,6 @@ func (c *Client) CreateUser(user LocalUser) (User, error) {
 		return User{}, nil
 	}
 
-	return resp, nil
-}
-
-func (c *Client) CreateAPIUser(user APIUser) (User, error) {
-	resp := User{}
 	return resp, nil
 }
 
