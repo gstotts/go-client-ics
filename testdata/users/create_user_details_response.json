@@ -1,0 +1,32 @@
+{
+    "users": [
+        {
+            "resource_id": "divvyuser:4:",
+            "name": "Boaty McBoatFace",
+            "user_id": 4,
+            "organization_admin": false,
+            "domain_admin": true,
+            "domain_viewer": false,
+            "email_address": "boat@boatface.com",
+            "username": "Boatface",
+            "organization_name": "Default Organization",
+            "organization_id": 1,
+            "two_factor_enabled": true,
+            "two_factor_required": false,
+            "auth": "local",
+            "session_ttl": 3600,
+            "session_expiration": "2023/01/01, 01:01:01 UTC",
+            "session_timeout_seconds": 3600,
+            "authentication_server_id": 1,
+            "auth_plugin_exists": false,
+            "navigation_blacklist": [],
+            "theme": "divvy-light-theme",
+            "require_pw_reset": true,
+            "create_date": "2022-01-02 12:34:56",
+            "aws_default_external_id": "1a2bcd3e-45fg-67hi-jklm-8o9p1q2r3st4u",
+            "api_key_generation_allowed": false,
+            "rapid7_org_id": ""
+        }
+    ],
+    "total_count": 3
+}

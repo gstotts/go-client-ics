@@ -55,6 +55,7 @@ func (c *Client) ListAdmins() (UserList, error) {
 	// List Admin Users
 
 	users, err := c.getUsers("/v2/prototype/domains/admins/list")
+	users.TotalCount = len(users.Users)
 	return users, err
 }
 
@@ -86,9 +87,9 @@ func (c *Client) GetUserByUsername(username string) (User, error) {
 		return User{}, err
 	}
 
-	for _, user := range all_users.Users {
+	for i, user := range all_users.Users {
 		if user.Username == username {
-			return user, nil
+			return all_users.Users[i], nil
 		}
 	}
 
@@ -103,29 +104,29 @@ func (c *Client) GetUserByID(user_id int) (User, error) {
 		return User{}, err
 	}
 
-	for _, user := range all_users.Users {
+	for i, user := range all_users.Users {
 		if user.UserID == user_id {
-			return user, nil
+			return all_users.Users[i], nil
 		}
 	}
 
 	return User{}, fmt.Errorf("unable to find user of user_id %d", user_id)
 }
 
-func (c *Client) postUser(url string, data interface{}) (User, error) {
+func (c *Client) postUser(url string, data interface{}) (userTempPasswordResponse, error) {
 	// Makes POST to Users API and returns User
 
 	// Make Request
 	body, err := c.makeRequest(http.MethodPost, url, data)
 	if err != nil {
-		return User{}, err
+		return userTempPasswordResponse{}, err
 	}
 
 	// Unmarshal Response
-	resp := User{}
+	resp := userTempPasswordResponse{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
-		return User{}, err
+		return userTempPasswordResponse{}, err
 	}
 
 	return resp, nil
@@ -134,8 +135,8 @@ func (c *Client) postUser(url string, data interface{}) (User, error) {
 func (c *Client) CreateUser(user LocalUser) (User, error) {
 	// Creates an InsightCloudSec User account
 
-	if user.Name == "" || user.AccessLevel == "" || user.EmailAddress == "" || user.Password == "" || user.Username == "" {
-		return User{}, fmt.Errorf("must set user's name, emailaddress, password, username and accesslevel")
+	if user.Name == "" || user.AccessLevel == "" || user.EmailAddress == "" || user.Username == "" {
+		return User{}, fmt.Errorf("must set user's name, emailaddress, username and accesslevel")
 	}
 
 	if !isValidAccessLevel(user.AccessLevel) {
@@ -143,20 +144,17 @@ func (c *Client) CreateUser(user LocalUser) (User, error) {
 	}
 
 	// Make Request
-	user_resp, err := c.postUser("/v2/public/user/create", userCreateRequest{
-		Name:              user.Name,
-		EmailAddress:      user.EmailAddress,
-		Username:          user.Username,
-		AccessLevel:       user.AccessLevel,
-		Password:          user.Password,
-		TwoFactorRequired: user.TwoFactorRequired,
-		ConfirmPassword:   user.Password,
-	})
+	user_resp, err := c.postUser("/v2/public/user/create", userCreateRequest(user))
 	if err != nil {
 		return User{}, err
 	}
 
+	// Get Full User Details
 	details, err := c.GetUserByID(user_resp.UserID)
+	// Append Full User Details with the Temporary PW
+	details.TempPWExpiration = user_resp.TempPWExpiration
+	details.TemporaryPW = user_resp.TemporaryPW
+
 	return details, err
 }
 

@@ -6,7 +6,6 @@ type LocalUser struct {
 	EmailAddress      string `json:"email"`
 	Username          string `json:"username"`
 	AccessLevel       string `json:"access_level,omitempty"`
-	Password          string `json:"password"`
 	TwoFactorRequired bool   `json:"two_factor_required"`
 }
 
@@ -34,9 +33,17 @@ type userCreateRequest struct {
 	EmailAddress      string `json:"email"`
 	Username          string `json:"username"`
 	AccessLevel       string `json:"access_level,omitempty"`
-	Password          string `json:"password"`
 	TwoFactorRequired bool   `json:"two_factor_required"`
-	ConfirmPassword   string `json:"confirm_password"`
+}
+
+// UserCreateResponse
+type userTempPasswordResponse struct {
+	Name             string `json:"name"`
+	UserID           int    `json:"user_id"`
+	Username         string `json:"username"`
+	OrganizationID   int    `json:"organization_id"`
+	TemporaryPW      string `json:"temporary_pw"`
+	TempPWExpiration string `json:"temp_pw_expiration"`
 }
 
 // User
@@ -76,13 +83,13 @@ type User struct {
 	OwnedResources                 int      `json:"owned_resources,omitempty"`
 	ServerName                     string   `json:"server_name,omitempty"`
 	Suspended                      bool     `json:"suspended,omitempty"`
-	TempPW                         string   `json:"temporary_pw,omitempty"`
+	TemporaryPW                    string   `json:"temporary_pw,omitempty"`
 	TempPWExpiration               string   `json:"temp_pw_expiration,omitempty"`
 }
 
 // UserList
 type UserList struct {
-	TotalCount int    `json:"total_count"`
+	TotalCount int    `json:"total_count,omitempty"`
 	Users      []User `json:"users"`
 }
 
