@@ -166,7 +166,7 @@ func (c *Client) CreateAPIUser(user APIUser) (User, error) {
 	}
 
 	// Make Request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create", user)
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create_api_only_user", user)
 	if err != nil {
 		return User{}, err
 	}
