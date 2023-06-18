@@ -191,6 +191,13 @@ func (c *Client) CreateSAMLUser(user SAMLUser) (User, error) {
 }
 
 func (c *Client) DeleteUser(resource_id string) error {
+	// Deletes an InsightCloudSec user of given resource ID
+
+	_, err := c.makeRequest(http.MethodDelete, fmt.Sprintf("/v2/prototype/user/%s/delete", resource_id), nil)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
