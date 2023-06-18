@@ -14,7 +14,7 @@ type APIUser struct {
 	Name           string `json:"name"`
 	EmailAddress   string `json:"email"`
 	Username       string `json:"username"`
-	ExpirationDate int64  `json:"expiration_date"`
+	ExpirationDate int64  `json:"expiration_date,omitempty"`
 }
 
 // SAMLUser
