@@ -50,7 +50,31 @@
             "active_api_key_present": true,
             "create_date": "2023-06-18 05:59:31",
             "aws_default_external_id": "a2a46f47-1658-4dbb-a225-52f4b287f26d"
+        },
+        {
+            "resource_id": "divvyuser:8:",
+            "name": "Test User Client",
+            "user_id": 8,
+            "organization_admin": false,
+            "domain_admin": false,
+            "domain_viewer": false,
+            "email_address": "testclient",
+            "username": "tclient",
+            "organization_name": "Default Organization",
+            "organization_id": 1,
+            "two_factor_enabled": false,
+            "two_factor_required": false,
+            "groups": 0,
+            "owned_resources": 0,
+            "consecutive_failed_login_attempts": 0,
+            "suspended": false,
+            "navigation_blacklist": [],
+            "require_pw_reset": true,
+            "console_access_denied": true,
+            "active_api_key_present": true,
+            "create_date": "2023-06-10 05:20:12",
+            "aws_default_external_id": "a2a46f47-1658-4dbb-a225-52f4b287f26d"
         }
     ],
-    "total_count": 2
+    "total_count": 3
 }

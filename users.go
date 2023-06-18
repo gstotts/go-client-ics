@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func (c *Client) CurrentUserInfo() (User, error) {
@@ -185,14 +186,17 @@ func (c *Client) CreateAPIUser(user APIUser) (User, error) {
 	return details, err
 }
 
-func (c *Client) CreateSAMLUser(user SAMLUser) (User, error) {
-	resp := User{}
-	return resp, nil
-}
+// NEED AUTH SERVERS SETUP PRIOR
+//
+// func (c *Client) CreateSAMLUser(user SAMLUser) (User, error) {
+// 	resp := User{}
+// 	return resp, nil
+// }
 
 func (c *Client) DeleteUser(resource_id string) error {
 	// Deletes an InsightCloudSec user of given resource ID
 
+	// Make Request
 	_, err := c.makeRequest(http.MethodDelete, fmt.Sprintf("/v2/prototype/user/%s/delete", resource_id), nil)
 	if err != nil {
 		return err
@@ -202,22 +206,57 @@ func (c *Client) DeleteUser(resource_id string) error {
 }
 
 func (c *Client) Get2FAStatus(user_id int) (MFAStatus, error) {
+	// Returns whether 2FA is enabled and/or required for the user of given ID
+
+	// Make Request
+	data := map[string]int{"user_id": user_id}
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_state", data)
+	if err != nil {
+		return MFAStatus{}, err
+	}
+
+	// Unmarshal Response
 	resp := MFAStatus{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return MFAStatus{}, err
+	}
+
 	return resp, nil
 }
 
 func (c *Client) Enable2FA() (OTPSecret, error) {
+	// Enables 2FA for current user and returns OTP Secret to utilize
 	resp := OTPSecret{}
 	return resp, nil
 }
 
 func (c *Client) Disable2FA(user_id int) error {
+	// Disables 2FA for the user of given ID
 	return nil
 }
 
-func (c *Client) ConvertUserToAPIUser(user_id int) (string, error) {
-	key := ""
-	return key, nil
+func (c *Client) ConvertUserToAPIUser(user_id int) (User, error) {
+	// Converts a normal user to an api-only user
+
+	data := map[string]string{"user_id": strconv.Itoa(user_id)}
+	// Make Request
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/update_to_api_only_user", data)
+	if err != nil {
+		return User{}, err
+	}
+
+	// Unmarshal Response
+	resp := userConvertToAPIUserResponse{}
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		return User{}, err
+	}
+
+	// Get Full API User Details
+	details, err := c.GetUserByID(user_id)
+	details.ApiKey = resp.ApiKey
+	return details, err
 }
 
 func (c *Client) UpdateConsoleAccessDeniedFlag(user_id string, console_access_denied bool) error {

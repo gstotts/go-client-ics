@@ -55,6 +55,12 @@ type userCreateAPIKeyResponse struct {
 	ApiKey         string `json:"api_key"`
 }
 
+// userConvertToAPIUserResponse
+type userConvertToAPIUserResponse struct {
+	UserID string `json:"user_id"`
+	ApiKey string `json:"api_key"`
+}
+
 // User
 type User struct {
 	Name                           string   `json:"name"`
