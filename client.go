@@ -85,7 +85,7 @@ func (c *Client) makeRequest(method, path string, data interface{}) ([]byte, err
 	if resp.StatusCode != http.StatusOK {
 		var api_error APIErrorResponse
 		_ = json.Unmarshal(body, &api_error)
-		return nil, fmt.Errorf("\n      HTTP Status: %d,\n   API Error Type: %s,\nAPI Error Message: %s\nAPI Traceback: %s", resp.StatusCode, api_error.ErrorType, api_error, api_error.Trackeback)
+		return nil, fmt.Errorf("\n      HTTP Status: %d,\n   API Error Type: %s,\nAPI Error Message: %s\nAPI Traceback: %s", resp.StatusCode, api_error.ErrorType, api_error, api_error.Traceback)
 	}
 
 	return body, err
