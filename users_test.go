@@ -430,6 +430,15 @@ func TestUsers_ConvertUserToAPIUser(t *testing.T) {
 
 func TestUsers_2FA_Status(t *testing.T) {
 	setup()
-
+	mux.HandleFunc("/v2/public/user/tfa_state", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_tfa_status_response.json"))
+	})
+	resp, err := client.Get2FAStatus(8)
+	assert.NoError(t, err)
+	assert.Equal(t, true, resp.Enabled)
+	assert.Equal(t, false, resp.Required)
 	teardown()
 }
