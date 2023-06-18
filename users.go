@@ -172,13 +172,17 @@ func (c *Client) CreateAPIUser(user APIUser) (User, error) {
 	}
 
 	// Unmarshal Response
-	resp := User{}
+	resp := userCreateAPIKeyResponse{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
-		return User{}, nil
+		return User{}, err
 	}
 
-	return resp, nil
+	// Get Full API User Details
+	details, err := c.GetUserByID(resp.UserID)
+	details.ApiKey = resp.ApiKey
+
+	return details, err
 }
 
 func (c *Client) CreateSAMLUser(user SAMLUser) (User, error) {

@@ -46,6 +46,15 @@ type userTempPasswordResponse struct {
 	TempPWExpiration string `json:"temp_pw_expiration"`
 }
 
+// UserCreateAPIKeyResponse
+type userCreateAPIKeyResponse struct {
+	Name           string `json:"name"`
+	UserID         int    `json:"user_id"`
+	Username       string `json:"username"`
+	OrganizationID int    `json:"organization_id"`
+	ApiKey         string `json:"api_key"`
+}
+
 // User
 type User struct {
 	Name                           string   `json:"name"`
@@ -85,6 +94,7 @@ type User struct {
 	Suspended                      bool     `json:"suspended,omitempty"`
 	TemporaryPW                    string   `json:"temporary_pw,omitempty"`
 	TempPWExpiration               string   `json:"temp_pw_expiration,omitempty"`
+	ApiKey                         string   `json:"api_key,omitempty"`
 }
 
 // UserList

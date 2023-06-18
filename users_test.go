@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -161,9 +162,9 @@ func TestUsers_CreateUser(t *testing.T) {
 	assert.Equal(t, 1, resp.OrganizationID)
 	assert.Equal(t, 3600, resp.SessionTimeoutSeconds)
 	assert.Equal(t, true, resp.RequirePWReset)
-	assert.Equal(t, "divvyuser:23:", resp.ResourceID)
+	assert.Equal(t, "divvyuser:4:", resp.ResourceID)
 	assert.Equal(t, "Boaty McBoatFace", resp.Name)
-	assert.Equal(t, 23, resp.UserID)
+	assert.Equal(t, 4, resp.UserID)
 	assert.Equal(t, true, resp.TwoFactorEnabled)
 	assert.Equal(t, "local", resp.Auth)
 	assert.Equal(t, "2023/01/01, 01:01:01 UTC", resp.SessionExpiration)
@@ -256,5 +257,96 @@ func TestUsers_CreateUser_BadAccessLevel(t *testing.T) {
 		TwoFactorRequired: false,
 	})
 	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoName(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	expire_date := time.Now().Add(720 * time.Hour)
+
+	_, err := client.CreateAPIUser(APIUser{
+		EmailAddress:   "api@mcboatface.com",
+		Username:       "api_boatface",
+		ExpirationDate: expire_date.Unix(),
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoEmail(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	expire_date := time.Now().Add(720 * time.Hour)
+
+	_, err := client.CreateAPIUser(APIUser{
+		Name:           "API McBoatface",
+		Username:       "api_boatface",
+		ExpirationDate: expire_date.Unix(),
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoUsername(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	expire_date := time.Now().Add(720 * time.Hour)
+
+	_, err := client.CreateAPIUser(APIUser{
+		Name:           "API McBoatface",
+		EmailAddress:   "api@mcboatface.com",
+		ExpirationDate: expire_date.Unix(),
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoExpirationDate(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	mux.HandleFunc("/v2/public/users/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_details_response.json"))
+	})
+	mux.HandleFunc("/v2/prototype/domains/admins/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_admin_details_response.json"))
+	})
+
+	_, err := client.CreateAPIUser(APIUser{
+		Name:         "API McBoatface",
+		EmailAddress: "api@mcboatface.com",
+		Username:     "api_boatface",
+	})
+	assert.NoError(t, err)
 	teardown()
 }
