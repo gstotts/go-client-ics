@@ -11,7 +11,7 @@ import (
 func TestAuthenticationServers_ListAuthenticationServers(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/prototype/authenticationservers/list", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'GET', got %s", r.Method)
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, getJSONFile("authentication_servers/auth_servers_list_response.json"))
