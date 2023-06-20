@@ -3,7 +3,7 @@
     "name": "Han Solo",
     "user_id": 123,
     "organization_admin": false,
-    "domain_admin": true,
+    "domain_admin": false,
     "domain_viewer": false,
     "email_address": "han_solo@mfalcon.com",
     "username": "han_solo",

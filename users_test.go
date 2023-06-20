@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -23,7 +24,7 @@ func TestUsers_CurrentUserInfo(t *testing.T) {
 	assert.Equal(t, "Han Solo", resp.Name)
 	assert.Equal(t, 123, resp.UserID)
 	assert.Equal(t, false, resp.OrganizationAdmin)
-	assert.Equal(t, true, resp.DomainAdmin)
+	assert.Equal(t, false, resp.DomainAdmin)
 	assert.Equal(t, false, resp.DomainViewer)
 	assert.Equal(t, "han_solo@mfalcon.com", resp.EmailAddress)
 	assert.Equal(t, "han_solo", resp.Username)
@@ -47,7 +48,7 @@ func TestUsers_CurrentUserInfo(t *testing.T) {
 	teardown()
 }
 
-func TestUsers_ListUsers(t *testing.T) {
+func TestUsers_ListBasicUsers(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/users/list", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
@@ -56,7 +57,7 @@ func TestUsers_ListUsers(t *testing.T) {
 		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
 	})
 
-	resp, err := client.ListUsers()
+	resp, err := client.ListBasicUsers()
 	assert.NoError(t, err)
 	assert.Equal(t, false, resp.Users[0].DomainViewer)
 	assert.Equal(t, 1, resp.Users[0].OrganizationID)
@@ -124,5 +125,370 @@ func TestUsers_ListUsers(t *testing.T) {
 	assert.Equal(t, "divvyuser:10:", resp.Users[2].ResourceID)
 	assert.Equal(t, "Mitchell Jacks", resp.Users[2].Name)
 	assert.Equal(t, 3, resp.TotalCount)
+	teardown()
+}
+
+func TestUsers_CreateUser(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_response.json"))
+	})
+	mux.HandleFunc("/v2/public/users/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_details_response.json"))
+	})
+	mux.HandleFunc("/v2/prototype/domains/admins/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_admin_details_response.json"))
+	})
+
+	resp, err := client.CreateUser(LocalUser{
+		Name:              "Boaty McBoatFace",
+		EmailAddress:      "boat@boatface.com",
+		Username:          "Boatface",
+		AccessLevel:       "BASIC_USER",
+		TwoFactorRequired: false,
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, false, resp.DomainViewer)
+	assert.Equal(t, "boat@boatface.com", resp.EmailAddress)
+	assert.Equal(t, 1, resp.OrganizationID)
+	assert.Equal(t, 3600, resp.SessionTimeoutSeconds)
+	assert.Equal(t, true, resp.RequirePWReset)
+	assert.Equal(t, "divvyuser:4:", resp.ResourceID)
+	assert.Equal(t, "Boaty McBoatFace", resp.Name)
+	assert.Equal(t, 4, resp.UserID)
+	assert.Equal(t, true, resp.TwoFactorEnabled)
+	assert.Equal(t, "local", resp.Auth)
+	assert.Equal(t, "2023/01/01, 01:01:01 UTC", resp.SessionExpiration)
+	assert.Equal(t, 1, resp.AuthenticationServerID)
+	assert.Equal(t, false, resp.OrganizationAdmin)
+	assert.Equal(t, false, resp.DomainAdmin)
+	assert.Equal(t, "Default Organization", resp.OrganizationName)
+	assert.Equal(t, false, resp.TwoFactorRequired)
+	assert.Equal(t, 3600, resp.SessionTTL)
+	assert.Equal(t, "2022-01-02 12:34:56", resp.CreateDate)
+	assert.Equal(t, "1a2bcd3e-45fg-67hi-jklm-8o9p1q2r3st4u", resp.AWSDefaultExternalID)
+	assert.Equal(t, false, resp.ApiKeyGenerationAllowed)
+	assert.Equal(t, "Boatface", resp.Username)
+	assert.Equal(t, false, resp.AuthPluginExists)
+	assert.Equal(t, make([]string, 0), resp.NavigationBlacklist)
+	assert.Equal(t, "divvy-light-theme", resp.Theme)
+	assert.Equal(t, "", resp.Rapid7OrgID)
+}
+
+func TestUsers_CreateUser_NoName(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
+
+	_, err := client.CreateUser(LocalUser{
+		EmailAddress:      "boat@boatface.com",
+		Username:          "Boatface",
+		AccessLevel:       "BASIC_USER",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateUser_NoEmail(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
+
+	_, err := client.CreateUser(LocalUser{
+		Name:              "Boaty McBoatface",
+		Username:          "Boatface",
+		AccessLevel:       "BASIC_USER",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateUser_NoUsername(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
+
+	_, err := client.CreateUser(LocalUser{
+		Name:              "Boaty McBoatface",
+		EmailAddress:      "boat@boatface.com",
+		AccessLevel:       "BASIC_USER",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateUser_BadAccessLevel(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/users/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_list_response.json"))
+	})
+
+	_, err := client.CreateUser(LocalUser{
+		Name:              "Boaty McBoatface",
+		EmailAddress:      "boat@boatface.com",
+		AccessLevel:       "GOD_MODE",
+		TwoFactorRequired: false,
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	mux.HandleFunc("/v2/public/users/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_details_response.json"))
+	})
+	mux.HandleFunc("/v2/prototype/domains/admins/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_admin_details_response.json"))
+	})
+
+	expire_date := time.Now().Add(720 * time.Hour)
+
+	resp, err := client.CreateAPIUser(APIUser{
+		Name:           "API McBoatface",
+		EmailAddress:   "api@mcboatface.com",
+		Username:       "api_boatface",
+		ExpirationDate: expire_date.Unix(),
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, "API McBoatface", resp.Name)
+	assert.Equal(t, "api@mcboatface.com", resp.EmailAddress)
+	assert.Equal(t, "api_boatface", resp.Username)
+	assert.Equal(t, "n8kP6d2SaWw7kVNgMWuUd3wN1cTddqW2aKWLpg18Lv-h2ceMymg", resp.ApiKey)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoName(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	expire_date := time.Now().Add(720 * time.Hour)
+
+	_, err := client.CreateAPIUser(APIUser{
+		EmailAddress:   "api@mcboatface.com",
+		Username:       "api_boatface",
+		ExpirationDate: expire_date.Unix(),
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoEmail(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	expire_date := time.Now().Add(720 * time.Hour)
+
+	_, err := client.CreateAPIUser(APIUser{
+		Name:           "API McBoatface",
+		Username:       "api_boatface",
+		ExpirationDate: expire_date.Unix(),
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoUsername(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	expire_date := time.Now().Add(720 * time.Hour)
+
+	_, err := client.CreateAPIUser(APIUser{
+		Name:           "API McBoatface",
+		EmailAddress:   "api@mcboatface.com",
+		ExpirationDate: expire_date.Unix(),
+	})
+	assert.Error(t, err)
+	teardown()
+}
+
+func TestUsers_CreateAPIUser_NoExpirationDate(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/create_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_api_user_response.json"))
+	})
+
+	mux.HandleFunc("/v2/public/users/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_details_response.json"))
+	})
+	mux.HandleFunc("/v2/prototype/domains/admins/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_admin_details_response.json"))
+	})
+
+	_, err := client.CreateAPIUser(APIUser{
+		Name:         "API McBoatface",
+		EmailAddress: "api@mcboatface.com",
+		Username:     "api_boatface",
+	})
+	assert.NoError(t, err)
+	teardown()
+}
+
+func TestUsers_DeleteUser(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/prototype/user/divvyuser:5:/delete", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodDelete, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
+	assert.NoError(t, client.DeleteUser("divvyuser:5:"))
+	teardown()
+}
+
+func TestUsers_ConvertUserToAPIUser(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/update_to_api_only_user", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/convert_to_api_user_response.json"))
+	})
+	mux.HandleFunc("/v2/public/users/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_details_response.json"))
+	})
+	mux.HandleFunc("/v2/prototype/domains/admins/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/create_user_admin_details_response.json"))
+	})
+
+	resp, err := client.ConvertUserToAPIUser(8)
+	assert.NoError(t, err)
+	assert.Equal(t, 8, resp.UserID)
+	assert.Equal(t, "E009_o_beBcNI8Rdp3si_KTmL38c_MFd08tUWpSMkREUDCVCaqo", resp.ApiKey)
+	teardown()
+}
+
+func TestUsers_2FA_Status(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/tfa_state", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/user_tfa_status_response.json"))
+	})
+	resp, err := client.Get2FAStatus(8)
+	assert.NoError(t, err)
+	assert.Equal(t, true, resp.Enabled)
+	assert.Equal(t, false, resp.Required)
+	teardown()
+}
+
+func TestUsers_Enable2FA(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/tfa_enable", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/enable_2fa_response.json"))
+	})
+	resp, err := client.Enable2FA()
+	assert.NoError(t, err)
+	assert.Equal(t, "AABB2CDEMFGGAB34C", resp.Secret)
+	teardown()
+}
+
+func TestUsers_Disable2FA(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/tfa_disable", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
+	err := client.Disable2FA(999)
+	assert.NoError(t, err)
+	teardown()
+}
+
+func TestUsers_ConsoleAccessDeniedFlag(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/update_console_access", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
+	err := client.UpdateConsoleAccessDeniedFlag(999, false)
+	assert.NoError(t, err)
+	teardown()
+}
+
+func TestUsers_DeactivateAPIKeys(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/apikey/deactivate", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
+	err := client.DeactivateAPIKeys(999)
+	assert.NoError(t, err)
 	teardown()
 }
