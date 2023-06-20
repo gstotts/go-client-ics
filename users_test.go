@@ -476,7 +476,7 @@ func TestUsers_ConsoleAccessDeniedFlag(t *testing.T) {
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
 	})
-	_, err := client.UpdateConsoleAccessDeniedFlag(999, false)
+	err := client.UpdateConsoleAccessDeniedFlag(999, false)
 	assert.NoError(t, err)
 	teardown()
 }
