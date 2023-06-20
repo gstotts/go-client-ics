@@ -469,6 +469,26 @@ func TestUsers_Disable2FA(t *testing.T) {
 	teardown()
 }
 
-func TestUsers_ConsoleAccessDeniedFlag(t *testing.T) {}
+func TestUsers_ConsoleAccessDeniedFlag(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/update_console_access", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
+	err := client.UpdateConsoleAccessDeniedFlag(999, false)
+	assert.NoError(t, err)
+	teardown()
+}
 
-func TestUsers_DeactivateAPIKeys(t *testing.T) {}
+func TestUsers_DeactivateAPIKeys(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/apikey/deactivate", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
+	err := client.DeactivateAPIKeys(999)
+	assert.NoError(t, err)
+	teardown()
+}
