@@ -26,33 +26,33 @@ func (c *Client) CurrentUserInfo() (User, error) {
 	return resp, nil
 }
 
-func (c *Client) getUsers(method, url string) (UserList, error) {
+func (c *Client) getUsers(method, url string) (Users, error) {
 	// Makes GET to Users API and Returns User List
 
 	// Make Request
 	body, err := c.makeRequest(method, url, nil)
 	if err != nil {
-		return UserList{TotalCount: 0, Users: []User{}}, err
+		return Users{TotalCount: 0, Users: []User{}}, err
 	}
 
 	// Unmarshal Response
-	resp := UserList{}
+	resp := Users{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
-		return UserList{TotalCount: 0, Users: []User{}}, err
+		return Users{TotalCount: 0, Users: []User{}}, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) ListBasicUsers() (UserList, error) {
+func (c *Client) ListBasicUsers() (Users, error) {
 	// Lists All Standard Users (non-Domain Admins)
 
 	users, err := c.getUsers(http.MethodGet, "/v2/public/users/list")
 	return users, err
 }
 
-func (c *Client) ListAdmins() (UserList, error) {
+func (c *Client) ListAdmins() (Users, error) {
 	// List Admin Users
 
 	users, err := c.getUsers(http.MethodPost, "/v2/prototype/domains/admins/list")
@@ -60,20 +60,20 @@ func (c *Client) ListAdmins() (UserList, error) {
 	return users, err
 }
 
-func (c *Client) ListUsers() (UserList, error) {
+func (c *Client) ListUsers() (Users, error) {
 	// List All Users - Basic and Admin
 
 	basic_users, err := c.ListBasicUsers()
 	if err != nil {
-		return UserList{TotalCount: 0, Users: []User{}}, nil
+		return Users{TotalCount: 0, Users: []User{}}, nil
 	}
 
 	admins, err := c.ListAdmins()
 	if err != nil {
-		return UserList{TotalCount: 0, Users: []User{}}, nil
+		return Users{TotalCount: 0, Users: []User{}}, nil
 	}
 
-	var combined UserList
+	var combined Users
 	combined.TotalCount = basic_users.TotalCount + admins.TotalCount
 	combined.Users = append(basic_users.Users, admins.Users...)
 

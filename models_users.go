@@ -104,7 +104,7 @@ type User struct {
 }
 
 // UserList
-type UserList struct {
+type Users struct {
 	TotalCount int    `json:"total_count,omitempty"`
 	Users      []User `json:"users"`
 }
