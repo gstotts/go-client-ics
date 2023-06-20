@@ -291,7 +291,15 @@ func (c *Client) UpdateConsoleAccessDeniedFlag(user_id int, console_access_denie
 	return nil
 }
 
-func (c *Client) DeactivateAPIKeys(user_id string) error {
+func (c *Client) DeactivateAPIKeys(user_id int) error {
+	// Deactivates API Keys for a given user of user_id
+
+	// Make Request
+	_, err := c.makeRequest(http.MethodPost, "/v2/public/apikey/deactivate", map[string]string{"user_id": strconv.Itoa(user_id)})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
