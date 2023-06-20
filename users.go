@@ -227,12 +227,32 @@ func (c *Client) Get2FAStatus(user_id int) (MFAStatus, error) {
 
 func (c *Client) Enable2FA() (OTPSecret, error) {
 	// Enables 2FA for current user and returns OTP Secret to utilize
+
+	// Make Request
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_enable", nil)
+	if err != nil {
+		return OTPSecret{}, err
+	}
+
+	// Unmarshal Response
 	resp := OTPSecret{}
+	json.Unmarshal(body, &resp)
+	if err != nil {
+		return OTPSecret{}, err
+	}
+
 	return resp, nil
 }
 
 func (c *Client) Disable2FA(user_id int) error {
 	// Disables 2FA for the user of given ID
+
+	// Make Request
+	_, err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_disable", map[string]int{"user_id": user_id})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
