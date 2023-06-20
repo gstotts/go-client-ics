@@ -442,3 +442,33 @@ func TestUsers_2FA_Status(t *testing.T) {
 	assert.Equal(t, false, resp.Required)
 	teardown()
 }
+
+func TestUsers_Enable2FA(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/tfa_enable", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("users/enable_2fa_response.json"))
+	})
+	resp, err := client.Enable2FA()
+	assert.NoError(t, err)
+	assert.Equal(t, "AABB2CDEMFGGAB34C", resp.Secret)
+	teardown()
+}
+
+func TestUsers_Disable2FA(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/user/tfa_disable", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
+	err := client.Disable2FA(999)
+	assert.NoError(t, err)
+	teardown()
+}
+
+func TestUsers_ConsoleAccessDeniedFlag(t *testing.T) {}
+
+func TestUsers_DeactivateAPIKeys(t *testing.T) {}
