@@ -279,16 +279,16 @@ func (c *Client) ConvertUserToAPIUser(user_id int) (User, error) {
 	return details, err
 }
 
-func (c *Client) UpdateConsoleAccessDeniedFlag(user_id int, console_access_denied bool) error {
+func (c *Client) UpdateConsoleAccessDeniedFlag(user_id int, console_access_denied bool) ([]byte, error) {
 	// Sets the console access for the given user of user_id
 
 	// Make Request
-	_, err := c.makeRequest(http.MethodPost, "/v2/public/user/update_console_access", map[string]interface{}{"user_id": strconv.Itoa(user_id), "console_access_denied": console_access_denied})
+	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/update_console_access", map[string]interface{}{"user_id": strconv.Itoa(user_id), "console_access_denied": console_access_denied})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return body, err
 }
 
 func (c *Client) DeactivateAPIKeys(user_id int) error {
