@@ -20,5 +20,5 @@ type Role struct {
 }
 
 type Roles struct {
-	Roles Role `json:"roles"`
+	Roles []Role `json:"roles"`
 }
