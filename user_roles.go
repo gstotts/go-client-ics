@@ -6,11 +6,13 @@ import (
 )
 
 func (c *Client) CreateRole(r Role) (Role, error) {
-	// Creates a role with the given details from the Role struct type
+	// Creates a role with the given details from the Role struct type.
+	// Badges, Resources and Groups cannot be attached until after creation.
 
 	if r.ResourceID != "" {
 		return Role{}, fmt.Errorf("resource id must not be set.  current value: %s", r.ResourceID)
 	}
+
 	resp := Role{}
 	err := c.makeRequest(http.MethodPost, "/v2/public/role/create", r, &resp)
 

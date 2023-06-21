@@ -1,7 +1,7 @@
 package insightcloudsecClient
 
 type Role struct {
-	ResourceID          string   `json:"resource_id"`
+	ResourceID          string   `json:"resource_id,omitempty"`
 	Name                string   `json:"name"`
 	Description         string   `json:"description"`
 	BadgeFilterOperator string   `json:"badge_filter_operator"`
@@ -13,10 +13,10 @@ type Role struct {
 	AddCloud            bool     `json:"add_cloud"`
 	DeleteCloud         bool     `json:"delete_cloud"`
 	GlobalScope         bool     `json:"global_scope"`
-	CloudScopes         []string `json:"cloud_scopes"`
-	ResourceGroupScopes []string `json:"resource_group_scopes"`
-	BadgeScopes         []string `json:"badge_scopes"`
-	Groups              []string `json:"groups"`
+	CloudScopes         []string `json:"cloud_scopes,omitempty"`
+	ResourceGroupScopes []string `json:"resource_group_scopes,omitempty"`
+	BadgeScopes         []string `json:"badge_scopes,omitempty"`
+	Groups              []string `json:"groups,omitempty"`
 }
 
 type Roles struct {
