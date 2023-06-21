@@ -1,0 +1,18 @@
+{
+    "resource_id": "divvyrole:1:24",
+    "name": "Test Role",
+    "description": "Role defines permissions to scopes",
+    "badge_filter_operator": "AND",
+    "all_permissions": false,
+    "view": false,
+    "provision": true,
+    "manage": false,
+    "delete": true,
+    "add_cloud": false,
+    "delete_cloud": true,
+    "global_scope": false,
+    "cloud_scopes": [],
+    "resource_group_scopes": [],
+    "badge_scopes": [],
+    "groups": []
+}
