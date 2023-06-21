@@ -66,18 +66,18 @@ func NewClient(host, username, password, apikey *string) (*Client, error) {
 	return &c, nil
 }
 
-func (c *Client) makeRequest(method, path string, data interface{}) ([]byte, error) {
+func (c *Client) makeRequest(method, path string, data interface{}, result any) error {
 
 	// Get Raw Request Response
 	resp, err := c.makeRawRequest(method, path, data)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// Read Response Data
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
 
@@ -85,10 +85,17 @@ func (c *Client) makeRequest(method, path string, data interface{}) ([]byte, err
 	if resp.StatusCode != http.StatusOK {
 		var api_error APIErrorResponse
 		_ = json.Unmarshal(body, &api_error)
-		return nil, fmt.Errorf("\n      HTTP Status: %d,\n   API Error Type: %s,\nAPI Error Message: %s", resp.StatusCode, api_error.ErrorType, api_error)
+		return fmt.Errorf("\n      HTTP Status: %d,\n   API Error Type: %s,\nAPI Error Message: %s", resp.StatusCode, api_error.ErrorType, api_error)
 	}
 
-	return body, err
+	if result != nil {
+		err = json.Unmarshal(body, &result)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (c *Client) makeRawRequest(method, path string, data interface{}) (*http.Response, error) {

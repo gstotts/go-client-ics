@@ -1,7 +1,6 @@
 package insightcloudsecClient
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -10,39 +9,19 @@ import (
 func (c *Client) CurrentUserInfo() (User, error) {
 	// Returns the current user information
 
-	// Make Request
-	body, err := c.makeRequest(http.MethodGet, "/v2/public/user/info", nil)
-	if err != nil {
-		return User{}, err
-	}
-
-	// Unmarshal Response
 	resp := User{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return User{}, err
-	}
+	err := c.makeRequest(http.MethodGet, "/v2/public/user/info", nil, &resp)
 
-	return resp, nil
+	return resp, err
 }
 
 func (c *Client) getUsers(method, url string) (Users, error) {
 	// Makes GET to Users API and Returns User List
 
-	// Make Request
-	body, err := c.makeRequest(method, url, nil)
-	if err != nil {
-		return Users{TotalCount: 0, Users: []User{}}, err
-	}
-
-	// Unmarshal Response
 	resp := Users{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return Users{TotalCount: 0, Users: []User{}}, err
-	}
+	err := c.makeRequest(method, url, nil, &resp)
 
-	return resp, nil
+	return resp, err
 }
 
 func (c *Client) ListBasicUsers() (Users, error) {
@@ -117,20 +96,10 @@ func (c *Client) GetUserByID(user_id int) (User, error) {
 func (c *Client) postUser(url string, data interface{}) (userTempPasswordResponse, error) {
 	// Makes POST to Users API and returns User
 
-	// Make Request
-	body, err := c.makeRequest(http.MethodPost, url, data)
-	if err != nil {
-		return userTempPasswordResponse{}, err
-	}
-
-	// Unmarshal Response
 	resp := userTempPasswordResponse{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return userTempPasswordResponse{}, err
-	}
+	err := c.makeRequest(http.MethodPost, url, data, &resp)
 
-	return resp, nil
+	return resp, err
 }
 
 func (c *Client) CreateUser(user LocalUser) (User, error) {
@@ -166,15 +135,8 @@ func (c *Client) CreateAPIUser(user APIUser) (User, error) {
 		return User{}, fmt.Errorf("must set api users's name, emailaddress, and username")
 	}
 
-	// Make Request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/create_api_only_user", user)
-	if err != nil {
-		return User{}, err
-	}
-
-	// Unmarshal Response
 	resp := userCreateAPIKeyResponse{}
-	err = json.Unmarshal(body, &resp)
+	err := c.makeRequest(http.MethodPost, "/v2/public/user/create_api_only_user", user, &resp)
 	if err != nil {
 		return User{}, err
 	}
@@ -196,13 +158,7 @@ func (c *Client) CreateAPIUser(user APIUser) (User, error) {
 func (c *Client) DeleteUser(resource_id string) error {
 	// Deletes an InsightCloudSec user of given resource ID
 
-	// Make Request
-	_, err := c.makeRequest(http.MethodDelete, fmt.Sprintf("/v2/prototype/user/%s/delete", resource_id), nil)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.makeRequest(http.MethodDelete, fmt.Sprintf("/v2/prototype/user/%s/delete", resource_id), nil, nil)
 }
 
 func (c *Client) Get2FAStatus(user_id int) (MFAStatus, error) {
@@ -210,65 +166,32 @@ func (c *Client) Get2FAStatus(user_id int) (MFAStatus, error) {
 
 	// Make Request
 	data := map[string]int{"user_id": user_id}
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_state", data)
-	if err != nil {
-		return MFAStatus{}, err
-	}
-
-	// Unmarshal Response
 	resp := MFAStatus{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return MFAStatus{}, err
-	}
+	err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_state", data, &resp)
 
-	return resp, nil
+	return resp, err
 }
 
 func (c *Client) Enable2FA() (OTPSecret, error) {
 	// Enables 2FA for current user and returns OTP Secret to utilize
 
-	// Make Request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_enable", nil)
-	if err != nil {
-		return OTPSecret{}, err
-	}
-
-	// Unmarshal Response
 	resp := OTPSecret{}
-	json.Unmarshal(body, &resp)
-	if err != nil {
-		return OTPSecret{}, err
-	}
-
-	return resp, nil
+	err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_enable", nil, &resp)
+	return resp, err
 }
 
 func (c *Client) Disable2FA(user_id int) error {
 	// Disables 2FA for the user of given ID
 
-	// Make Request
-	_, err := c.makeRequest(http.MethodPost, "/v2/public/user/tfa_disable", map[string]int{"user_id": user_id})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.makeRequest(http.MethodPost, "/v2/public/user/tfa_disable", map[string]int{"user_id": user_id}, nil)
 }
 
 func (c *Client) ConvertUserToAPIUser(user_id int) (User, error) {
 	// Converts a normal user to an api-only user
 
 	data := map[string]string{"user_id": strconv.Itoa(user_id)}
-	// Make Request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/update_to_api_only_user", data)
-	if err != nil {
-		return User{}, err
-	}
-
-	// Unmarshal Response
 	resp := userConvertToAPIUserResponse{}
-	err = json.Unmarshal(body, &resp)
+	err := c.makeRequest(http.MethodPost, "/v2/public/user/update_to_api_only_user", data, &resp)
 	if err != nil {
 		return User{}, err
 	}
@@ -281,26 +204,13 @@ func (c *Client) ConvertUserToAPIUser(user_id int) (User, error) {
 
 func (c *Client) UpdateConsoleAccessDeniedFlag(user_id int, console_access_denied bool) error {
 	// Sets the console access for the given user of user_id
-
-	// Make Request
-	_, err := c.makeRequest(http.MethodPost, "/v2/public/user/update_console_access", map[string]interface{}{"user_id": strconv.Itoa(user_id), "console_access_denied": console_access_denied})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.makeRequest(http.MethodPost, "/v2/public/user/update_console_access", map[string]interface{}{"user_id": strconv.Itoa(user_id), "console_access_denied": console_access_denied}, nil)
 }
 
 func (c *Client) DeactivateAPIKeys(user_id int) error {
 	// Deactivates API Keys for a given user of user_id
 
-	// Make Request
-	_, err := c.makeRequest(http.MethodPost, "/v2/public/apikey/deactivate", map[string]string{"user_id": strconv.Itoa(user_id)})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.makeRequest(http.MethodPost, "/v2/public/apikey/deactivate", map[string]string{"user_id": strconv.Itoa(user_id)}, nil)
 }
 
 func isValidAccessLevel(level string) bool {
