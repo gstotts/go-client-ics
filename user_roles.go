@@ -19,6 +19,23 @@ func (c *Client) CreateRole(r Role) (Role, error) {
 	return resp, err
 }
 
+func (c *Client) GetRoleByID(resource_id string) (Role, error) {
+	// Returns a specific role of the given role_id
+
+	roles, err := c.ListRoles()
+	if err != nil {
+		return Role{}, fmt.Errorf("error retrieving list of roles:\n%s", err)
+	}
+
+	for _, r := range roles.Roles {
+		if r.ResourceID == resource_id {
+			return r, nil
+		}
+	}
+
+	return Role{}, fmt.Errorf("unable to find role with resource_id: %s", resource_id)
+}
+
 func (c *Client) UpdateRole(role_resource_id string, r Role) (Role, error) {
 	// Updates the existing role at the given resource_id with the config of r Role type struct
 
