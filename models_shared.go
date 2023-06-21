@@ -6,3 +6,9 @@ type APIErrorResponse struct {
 	ErrorType    string `json:"error_type"`
 	Traceback    string `json:"traceback"`
 }
+
+// Badge
+type Badge struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
