@@ -75,7 +75,7 @@ func (c *Client) UpdateRoleUserGroups(role_resource_id string, group_ids []strin
 	}
 
 	resp := Role{}
-	err := c.makeRequest(http.MethodGet, fmt.Sprintf("/v2/public/roles/%s/groups/update", role_resource_id), data, &resp)
+	err := c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/public/roles/%s/groups/update", role_resource_id), data, &resp)
 	return resp, err
 
 }
