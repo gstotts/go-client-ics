@@ -66,7 +66,7 @@ func (c *Client) UpdateRoleScope(role_resource_id string, resource_ids, deprecat
 	return resp, err
 }
 
-func (c *Client) UpdateRoleUserGroups(role_resource_id, group_ids []string) (Role, error) {
+func (c *Client) UpdateRoleUserGroups(role_resource_id string, group_ids []string) (Role, error) {
 	// Allows you to update a role's scope for user groups
 
 	// Build payload
