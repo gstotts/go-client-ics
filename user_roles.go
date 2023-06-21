@@ -36,12 +36,10 @@ func (c *Client) GetRoleByID(resource_id string) (Role, error) {
 	return Role{}, fmt.Errorf("unable to find role with resource_id: %s", resource_id)
 }
 
-func (c *Client) UpdateRole(role_resource_id string, r Role) (Role, error) {
+func (c *Client) UpdateRole(role_resource_id string, r Role) error {
 	// Updates the existing role at the given resource_id with the config of r Role type struct
 
-	resp := Role{}
-	err := c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/public/role/%s/update", role_resource_id), r, &resp)
-	return resp, err
+	return c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/public/role/%s/update", role_resource_id), r, &r)
 }
 
 func (c *Client) ListRoles() (Roles, error) {
