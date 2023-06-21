@@ -66,6 +66,16 @@ func (c *Client) UpdateRoleScope(role_resource_id string, resource_ids, deprecat
 	return resp, err
 }
 
-func (c *Client) UpdateRoleUserGroups(role_resource_id, group_ids string) (Role, error) {
-	return Role{}, nil
+func (c *Client) UpdateRoleUserGroups(role_resource_id, group_ids []string) (Role, error) {
+	// Allows you to update a role's scope for user groups
+
+	// Build payload
+	data := map[string]interface{}{
+		"group_resource_ids": group_ids,
+	}
+
+	resp := Role{}
+	err := c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/public/roles/%s/groups/update", role_resource_id), data, &resp)
+	return resp, err
+
 }
