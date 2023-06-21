@@ -88,7 +88,6 @@ func (c *Client) makeRequest(method, path string, data interface{}, result any) 
 		return fmt.Errorf("\n      HTTP Status: %d,\n   API Error Type: %s,\nAPI Error Message: %s", resp.StatusCode, api_error.ErrorType, api_error)
 	}
 
-	fmt.Println(body, path)
 	if result != nil {
 		err = json.Unmarshal(body, &result)
 		if err != nil {
