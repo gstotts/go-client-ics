@@ -48,7 +48,7 @@ func (c *Client) UpdateRole(role_resource_id string, r Role) (Role, error) {
 		r.ResourceID = ""
 	}
 
-	if r.BadgeScopes != nil || r.BadgeFilterOperator != "" || r.CloudScopes != nil || r.ResourceGroupScopes != nil {
+	if r.BadgeScopes != nil || r.BadgeFilterOperator != "" || r.CloudScopes != nil || r.ResourceGroupScopes != nil || r.Groups != nil {
 		return Role{}, fmt.Errorf("badgefilteroperator, badgescopes, cloudscopes and resourcegroupscopes must all be handled via other update methods")
 	}
 
