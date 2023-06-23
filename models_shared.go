@@ -12,3 +12,8 @@ type Badge struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
+
+// Badges
+type Badges struct {
+	Badges []Badge `json:"badges"`
+}

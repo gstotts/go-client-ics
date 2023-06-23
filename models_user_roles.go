@@ -22,3 +22,12 @@ type Role struct {
 type Roles struct {
 	Roles []Role `json:"roles"`
 }
+
+type rolesUpdateScopeRequest struct {
+	ResourceIDs           []string `json:"resource_ids"`
+	DeprecatedResourceIDs []string `json:"deprecated_resource_ids"`
+}
+
+type rolesUpdateUserGroupsRequest struct {
+	GroupResourceIDs []string `json:"group_resource_ids"`
+}

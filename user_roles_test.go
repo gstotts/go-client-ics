@@ -262,12 +262,59 @@ func TestUserRoles_ListRoles(t *testing.T) {
 
 func TestUserRoles_UpdateRoleScope(t *testing.T) {
 	setup()
-
+	mux.HandleFunc("/v2/public/roles/divvyrole:1:24/scope/update", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.NotNil(t, r.Body)
+		var req_body rolesUpdateScopeRequest
+		err := json.NewDecoder(r.Body).Decode(&req_body)
+		assert.NoError(t, err)
+		assert.Equal(t, []string{"resourcegroup:1", "divvyorganizationservice:1"}, req_body.ResourceIDs)
+		assert.Equal(t, []string{"resourcegroup:2"}, req_body.DeprecatedResourceIDs)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("roles/role_response.json"))
+	})
+	resp, err := client.UpdateRoleScope("divvyrole:1:24", []string{"resourcegroup:1", "divvyorganizationservice:1"}, []string{"resourcegroup:2"})
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"resourcegroup:1:"}, resp.ResourceGroupScopes)
+	assert.Equal(t, []string{"divvyorganizationservice:1"}, resp.CloudScopes)
 	teardown()
 }
 
 func TestUserRoles_UpdateRoleUserGroups(t *testing.T) {
 	setup()
+	mux.HandleFunc("/v2/public/roles/divvyrole:1:24/groups/update", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.NotNil(t, r.Body)
+		var req_body rolesUpdateUserGroupsRequest
+		err := json.NewDecoder(r.Body).Decode(&req_body)
+		assert.NoError(t, err)
+		assert.Equal(t, []string{"divvyusergroup:20"}, req_body.GroupResourceIDs)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("roles/role_response.json"))
+	})
+	resp, err := client.UpdateRoleUserGroups("divvyrole:1:24", []string{"divvyusergroup:20"})
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"divvyusergroup:20"}, resp.Groups)
+	teardown()
+}
 
+func TestUserRoles_UpdateRoleBadges(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/roles/divvyrole:1:24/AND/badges/update", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.NotNil(t, r.Body)
+		var req_body Badges
+		err := json.NewDecoder(r.Body).Decode(&req_body)
+		assert.NoError(t, err)
+		assert.Equal(t, Badge{Key: "cloud_type", Value: "GCP"}, req_body.Badges[0])
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("roles/role_response.json"))
+	})
+	resp, err := client.UpdateRoleBadges("divvyrole:1:24", "AND", []Badge{{Key: "cloud_type", Value: "GCP"}})
+	assert.NoError(t, err)
+	assert.Equal(t, []string{"cloud_type:GCP"}, resp.BadgeScopes)
 	teardown()
 }

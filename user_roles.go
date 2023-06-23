@@ -69,9 +69,9 @@ func (c *Client) UpdateRoleScope(role_resource_id string, resource_ids, deprecat
 	// Allows you to update a role's scope for resource_ids
 
 	// Build payload
-	data := map[string]interface{}{
-		"resource_ids":            resource_ids,
-		"deprecated_resource_ids": deprecated_resource_ids,
+	data := rolesUpdateScopeRequest{
+		ResourceIDs:           resource_ids,
+		DeprecatedResourceIDs: deprecated_resource_ids,
 	}
 
 	resp := Role{}
@@ -83,8 +83,8 @@ func (c *Client) UpdateRoleUserGroups(role_resource_id string, group_ids []strin
 	// Allows updating a role's scope for user groups
 
 	// Build payload
-	data := map[string]interface{}{
-		"group_resource_ids": group_ids,
+	data := rolesUpdateUserGroupsRequest{
+		GroupResourceIDs: group_ids,
 	}
 
 	resp := Role{}

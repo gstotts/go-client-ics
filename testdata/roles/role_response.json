@@ -11,8 +11,16 @@
     "add_cloud": false,
     "delete_cloud": true,
     "global_scope": false,
-    "cloud_scopes": [],
-    "resource_group_scopes": [],
-    "badge_scopes": [],
-    "groups": []
+    "cloud_scopes": [
+        "divvyorganizationservice:1"
+    ],
+    "resource_group_scopes": [
+        "resourcegroup:1:"
+    ],
+    "badge_scopes": [
+        "cloud_type:GCP"
+    ],
+    "groups": [
+        "divvyusergroup:20"
+    ]
 }
