@@ -1,0 +1,68 @@
+{
+    "roles": [
+        {
+            "resource_id": "divvyrole:1:20",
+            "name": "Random Role 213",
+            "description": "Allows stuff",
+            "badge_filter_operator": "AND",
+            "all_permissions": true,
+            "view": false,
+            "provision": false,
+            "manage": false,
+            "delete": false,
+            "add_cloud": true,
+            "delete_cloud": false,
+            "global_scope": true,
+            "cloud_scopes": [],
+            "resource_group_scopes": [],
+            "badge_scopes": [],
+            "groups": []
+        },
+        {
+            "resource_id": "divvyrole:1:21",
+            "name": "Global Read Only",
+            "description": "Allows only read for all",
+            "badge_filter_operator": "AND",
+            "all_permissions": false,
+            "view": true,
+            "provision": false,
+            "manage": true,
+            "delete": false,
+            "add_cloud": false,
+            "delete_cloud": false,
+            "global_scope": true,
+            "cloud_scopes": [
+                "divvyorganizationservice:1"
+            ],
+            "resource_group_scopes": [
+                "resourcegroup:1:"
+            ],
+            "badge_scopes": [
+                "cloud_type:GCP"
+            ],
+            "groups": [
+                "divvyusergroup:20"
+            ]
+        },
+        {
+            "resource_id": "divvyrole:1:22",
+            "name": "Updated Name 5",
+            "description": "Updated Description 5",
+            "badge_filter_operator": "OR",
+            "all_permissions": false,
+            "view": false,
+            "provision": true,
+            "manage": false,
+            "delete": true,
+            "add_cloud": true,
+            "delete_cloud": true,
+            "global_scope": false,
+            "cloud_scopes": [],
+            "resource_group_scopes": [],
+            "badge_scopes": [],
+            "groups": [
+                "divvyusergroup:20"
+            ]
+        }
+    ]
+}

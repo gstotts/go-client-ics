@@ -1,0 +1,14 @@
+{
+    "servers": [
+        {
+            "server_id": 1,
+            "server_name": "saml_server",
+            "server_host": "mysaml.mydomain.org",
+            "server_port": 123,
+            "secure": 1,
+            "server_type": "saml",
+            "global_scope": true,
+            "mapped_groups": 5
+        }
+    ]
+}

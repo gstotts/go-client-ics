@@ -1,7 +1,6 @@
 package insightcloudsecClient
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -40,20 +39,9 @@ func (c *Client) Login() (AuthResponse, error) {
 		return AuthResponse{}, fmt.Errorf("missing username and/or password")
 	}
 
-	// Make login request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/user/login", c.Auth)
-	if err != nil {
-		return AuthResponse{}, err
-	}
-
-	// Unmarshal Data
 	resp := AuthResponse{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return AuthResponse{}, err
-	}
-
-	return resp, nil
+	err := c.makeRequest(http.MethodPost, "/v2/public/user/login", c.Auth, &resp)
+	return resp, err
 }
 
 func (c *Client) CreateAPIKey(key_length int) (string, error) {
@@ -64,8 +52,8 @@ func (c *Client) CreateAPIKey(key_length int) (string, error) {
 		KeyLength: int32(key_length),
 	}
 
-	// Make Request
-	body, err := c.makeRequest(http.MethodPost, "/v2/public/apikey/create", data)
+	var body string
+	err := c.makeRequest(http.MethodPost, "/v2/public/apikey/create", data, &body)
 	if err != nil {
 		return "", err
 	}
