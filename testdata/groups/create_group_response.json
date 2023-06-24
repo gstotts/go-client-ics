@@ -1,6 +1,6 @@
 {
     "group": {
-        "group_id": 21,
+        "group_id": 25,
         "resource_id": "divvyusergroup:25",
         "name": "Test UserGroup",
         "users": 0,

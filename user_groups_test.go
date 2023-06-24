@@ -17,20 +17,31 @@ func TestGroups_ListGroups(t *testing.T) {
 		fmt.Fprint(w, getJSONFile("groups/list_groups_response.json"))
 	})
 
+	testCases := []struct {
+		id           int
+		resource_id  string
+		name         string
+		users        int
+		roles        int
+		entitlements bool
+	}{
+		{20, "divvyusergroup:20", "My Fun Users", 10, 2, true},
+		{21, "divvyusergroup:21", "Test UserGroup", 1, 0, false},
+	}
+
 	groups, err := client.ListGroups()
 	assert.NoError(t, err)
-	assert.Equal(t, 20, groups.Groups[0].ID)
-	assert.Equal(t, 21, groups.Groups[1].ID)
-	assert.Equal(t, "divvyusergroup:20", groups.Groups[0].ResourceID)
-	assert.Equal(t, "divvyusergroup:21", groups.Groups[1].ResourceID)
-	assert.Equal(t, "My Fun Users", groups.Groups[0].Name)
-	assert.Equal(t, "Test UserGroup", groups.Groups[1].Name)
-	assert.Equal(t, 10, groups.Groups[0].Users)
-	assert.Equal(t, 1, groups.Groups[1].Users)
-	assert.Equal(t, 2, groups.Groups[0].Roles)
-	assert.Equal(t, 0, groups.Groups[1].Roles)
-	assert.True(t, groups.Groups[0].EntitlementsConfigured)
-	assert.False(t, groups.Groups[1].EntitlementsConfigured)
+
+	for i, tc := range testCases {
+		t.Run(fmt.Sprintf("Test Group %d", i), func(t *testing.T) {
+			assert.Equal(t, tc.id, groups.Groups[i].ID)
+			assert.Equal(t, tc.resource_id, groups.Groups[i].ResourceID)
+			assert.Equal(t, tc.name, groups.Groups[i].Name)
+			assert.Equal(t, tc.users, groups.Groups[i].Users)
+			assert.Equal(t, tc.roles, groups.Groups[i].Roles)
+			assert.Equal(t, tc.entitlements, groups.Groups[i].EntitlementsConfigured)
+		})
+	}
 	teardown()
 }
 
@@ -43,33 +54,72 @@ func TestGroups_GetGroupByID(t *testing.T) {
 		fmt.Fprint(w, getJSONFile("groups/list_groups_response.json"))
 	})
 
-	// By int
-	group1, err := client.GetGroupByID(20)
-	assert.NoError(t, err)
-	assert.Equal(t, "My Fun Users", group1.Name)
-	// By string
-	group2, err := client.GetGroupByID("divvyusergroup:21")
-	assert.NoError(t, err)
-	assert.Equal(t, "Test UserGroup", group2.Name)
-	// Invalid string
-	_, err = client.GetGroupByID("divvvyusergrouppppp:21")
-	assert.Error(t, err)
-	// Invalid type
-	var a interface{}
-	_, err = client.GetGroupByID(a)
-	assert.Error(t, err)
+	testCases := []struct {
+		test_name string
+		id        any
+		name      string
+		err       bool
+	}{
+		{"Valid Group by Int", 20, "My Fun Users", false},
+		{"Valid Group by String", "divvyusergroup:21", "Test UserGroup", false},
+		{"Invalid Group by Int", 22, "", true},
+		{"Invalid Group by Type", []int{1, 2}, "", true},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test_name, func(t *testing.T) {
+			group, err := client.GetGroupByID(tc.id)
+			if tc.err {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+			assert.Equal(t, tc.name, group.Name)
+		})
+	}
 	teardown()
 }
 
 func TestGroups_CreateGroup(t *testing.T) {
 	setup()
+	mux.HandleFunc("/v2/prototype/group/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("groups/create_group_response.json"))
+	})
 
+	group, err := client.CreateGroup("Test UserGroup")
+	assert.NoError(t, err)
+	assert.Equal(t, "Test UserGroup", group.Name)
 	teardown()
 }
 
 func TestGroups_DeleteGroup(t *testing.T) {
 	setup()
+	mux.HandleFunc("/v2/prototype/group/divvyusergroup:25/delete", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodDelete, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+	})
 
+	testCases := []struct {
+		id  string
+		err bool
+	}{
+		{"divvyusergroup:25", false},
+		{"divvyusergroup:22", true},
+	}
+
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("Delete Test Group: %s", tc.id), func(t *testing.T) {
+			if tc.err {
+				assert.Error(t, client.DeleteGroup(tc.id))
+			} else {
+				assert.NoError(t, client.DeleteGroup(tc.id))
+			}
+		})
+	}
 	teardown()
 }
 
