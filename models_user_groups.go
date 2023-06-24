@@ -11,5 +11,4 @@ type Group struct {
 
 type Groups struct {
 	Groups []Group `json:"groups"`
-	client *Client
 }
