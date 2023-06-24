@@ -106,6 +106,9 @@ func (c *Client) ListGroupUsers(group_resource_id string) (Users, error) {
 
 	var resp Users
 	err := c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/prototype/group/%s/users/list", group_resource_id), nil, &resp)
+	if resp.TotalCount == 0 {
+		resp.TotalCount = len(resp.Users)
+	}
 	return resp, err
 }
 

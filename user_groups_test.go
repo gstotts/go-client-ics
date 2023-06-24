@@ -220,37 +220,114 @@ func TestGroups_DeleteGroupUser(t *testing.T) {
 }
 
 func TestGroups_ListGroupUsers(t *testing.T) {
-	setup()
+	testCases := []struct {
+		test_name      string
+		group_id       string
+		expected_count int
+		err_expected   bool
+	}{
+		{"Valid Request", "divvyusergroup:10", 1, false},
+		{"Invalid Group", "divvyusergroup:9999", 0, true},
+	}
 
-	teardown()
+	for _, tc := range testCases {
+		setup()
+		mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/users/list", func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, getJSONFile("groups/list_group_users.json"))
+		})
+		users, err := client.ListGroupUsers(tc.group_id)
+		if tc.err_expected {
+			assert.Error(t, err)
+		} else {
+			assert.NoError(t, err)
+			assert.Equal(t, tc.expected_count, users.TotalCount)
+		}
+		teardown()
+	}
 }
 
 func TestGroups_ListGroupRoles(t *testing.T) {
-	setup()
+	testCases := []struct {
+		test_name      string
+		group_id       string
+		expected_count int
+		err_expected   bool
+	}{
+		{"Valid Request", "divvyusergroup:10", 2, false},
+		{"Invalid Group", "divvyusergroup:00000", 0, true},
+	}
 
-	teardown()
+	for _, tc := range testCases {
+		setup()
+		mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/roles/list", func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, getJSONFile("groups/list_group_roles.json"))
+		})
+
+		roles, err := client.ListGroupRoles(tc.group_id)
+		if tc.err_expected {
+			assert.Error(t, err)
+		} else {
+			assert.NoError(t, err)
+			assert.Equal(t, tc.expected_count, len(roles.Roles))
+		}
+		teardown()
+	}
 }
 
-func TestGroups_UpdateGroupRoles(t *testing.T) {
-	setup()
+// func TestGroups_UpdateGroupRoles(t *testing.T) {
+// 	testCases := []struct {
+// 	}{
+// 		{},
+// 	}
 
-	teardown()
-}
+// 	for _, tc := range testCases {
+// 		setup()
 
-func TestGroups_ListGroupEntitlements(t *testing.T) {
-	setup()
+// 		teardown()
+// 	}
+// }
 
-	teardown()
-}
+// func TestGroups_ListGroupEntitlements(t *testing.T) {
+// 	testCases := []struct {
+// 	}{
+// 		{},
+// 	}
 
-func TestGroups_SetEntitelments(t *testing.T) {
-	setup()
+// 	for _, tc := range testCases {
+// 		setup()
 
-	teardown()
-}
+// 		teardown()
+// 	}
+// }
 
-func TestGroups_ListUserEntitlement(t *testing.T) {
-	setup()
+// func TestGroups_SetEntitelments(t *testing.T) {
+// 	testCases := []struct {
+// 	}{
+// 		{},
+// 	}
 
-	teardown()
-}
+// 	for _, tc := range testCases {
+// 		setup()
+
+// 		teardown()
+// 	}
+// }
+
+// func TestGroups_ListUserEntitlement(t *testing.T) {
+// 	testCases := []struct {
+// 	}{
+// 		{},
+// 	}
+
+// 	for _, tc := range testCases {
+// 		setup()
+
+// 		teardown()
+// 	}
+// }

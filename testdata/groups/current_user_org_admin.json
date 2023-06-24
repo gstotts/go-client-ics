@@ -1,0 +1,13 @@
+{
+    "username": "janedoe",
+    "two_factor_enabled": false,
+    "user_id": 1,
+    "name": "Jane Doe",
+    "resource_id": "divvyuser:1:",
+    "two_factor_required": false,
+    "organization_name": "Default Organization",
+    "domain_admin": false,
+    "email_address": "jane.doe@divvycloud.com",
+    "auth_plugin_exists": false,
+    "organization_admin": true
+}
