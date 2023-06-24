@@ -84,7 +84,7 @@ func (c *Client) UpdateAllGroupUsers(group_resource_id string, users []string) (
 		return Group{}, fmt.Errorf("error validating user is org admin prior:\n%s", err)
 	}
 
-	if !(current_user.OrganizationAdmin) {
+	if !(current_user.OrganizationAdmin) && !(current_user.DomainAdmin) {
 		return Group{}, fmt.Errorf("user must be org admin to update all group members")
 	}
 
