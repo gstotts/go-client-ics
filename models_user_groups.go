@@ -12,3 +12,19 @@ type Group struct {
 type Groups struct {
 	Groups []Group `json:"groups"`
 }
+
+type createGroupRequest struct {
+	Name string `json:"group_name"`
+}
+
+type groupResponse struct {
+	Group Group `json:"group"`
+}
+
+type addUsersToGroupRequest struct {
+	UserResourceIDs []string `json:"user_resource_ids"`
+}
+
+type deleteUserFromGroupRequest struct {
+	UserResourceID string `json:"user_resource_id"`
+}
