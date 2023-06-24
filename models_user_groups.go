@@ -1,12 +1,12 @@
 package insightcloudsecClient
 
 type Group struct {
-	ID                    int    `json:"group_id"`
-	ResourceID            string `json:"resource_id"`
-	Name                  string `json:"name"`
-	Users                 int    `json:"users"`
-	Roles                 int    `json:"roles"`
-	EntitlementConfigured bool   `json:"entitlement_configured"`
+	ID                     int    `json:"group_id"`
+	ResourceID             string `json:"resource_id"`
+	Name                   string `json:"name"`
+	Users                  int    `json:"users"`
+	Roles                  int    `json:"roles"`
+	EntitlementsConfigured bool   `json:"entitlements_configured"`
 }
 
 type Groups struct {
