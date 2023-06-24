@@ -28,3 +28,7 @@ type addUsersToGroupRequest struct {
 type deleteUserFromGroupRequest struct {
 	UserResourceID string `json:"user_resource_id"`
 }
+
+type updateGroupRolesRequest struct {
+	ResourceIDs []string `json:"resource_ids"`
+}

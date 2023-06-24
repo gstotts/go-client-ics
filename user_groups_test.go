@@ -280,18 +280,36 @@ func TestGroups_ListGroupRoles(t *testing.T) {
 	}
 }
 
-// func TestGroups_UpdateGroupRoles(t *testing.T) {
-// 	testCases := []struct {
-// 	}{
-// 		{},
-// 	}
+func TestGroups_UpdateGroupRoles(t *testing.T) {
+	testCases := []struct {
+		test_name    string
+		group_id     string
+		resource_ids []string
+		err_expected bool
+	}{
+		{"Valid Request", "divvyusergroup:10", []string{"divvyrole:1:5", "divvyrole:1:2", "divvyrole:1:3", "divvyrole:1:1", "divvyrole:1:4"}, false},
+		{"Invalid Group", "divvyusergroup:9999", []string{}, true},
+	}
 
-// 	for _, tc := range testCases {
-// 		setup()
+	for _, tc := range testCases {
+		setup()
+		mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/roles/update", func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+			w.Header().Set("content-type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprint(w, getJSONFile("groups/generic_group_response.json"))
+		})
 
-// 		teardown()
-// 	}
-// }
+		group, err := client.UpdateGroupRoles(tc.group_id, tc.resource_ids)
+		if tc.err_expected {
+			assert.Error(t, err)
+		} else {
+			assert.NoError(t, err)
+			assert.Equal(t, len(tc.resource_ids), group.Roles)
+		}
+		teardown()
+	}
+}
 
 // func TestGroups_ListGroupEntitlements(t *testing.T) {
 // 	testCases := []struct {

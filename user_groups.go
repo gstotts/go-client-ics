@@ -120,7 +120,13 @@ func (c *Client) ListGroupRoles(group_resource_id string) (Roles, error) {
 	return resp, err
 }
 
-// func (c *Client) UpdateGroupRoles(group_resource_id string, role_resource_ids []string) (Roles, error) {}
+func (c *Client) UpdateGroupRoles(group_resource_id string, role_resource_ids []string) (Group, error) {
+	// Updates the roles associated with the group
+
+	var resp groupResponse
+	err := c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/prototype/group/%s/roles/update", group_resource_id), updateGroupRolesRequest{ResourceIDs: role_resource_ids}, &resp)
+	return resp.Group, err
+}
 
 // func (c *Client) ListGroupEntitlements(group_resource_id string) (Entitlements, error) {}
 
