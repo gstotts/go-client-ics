@@ -68,7 +68,7 @@ func (c *Client) DeleteGroup(group_resource_id string) error {
 	return c.makeRequest(http.MethodDelete, fmt.Sprintf("/v2/prototype/group/%s/delete", group_resource_id), nil, nil)
 }
 
-func (c *Client) AddUsersToGroup(group_resource_id string, users []string) (Group, error) {
+func (c *Client) AddGroupUsers(group_resource_id string, users []string) (Group, error) {
 	// Adds the slice of given users to the group
 
 	var resp groupResponse
@@ -93,7 +93,7 @@ func (c *Client) UpdateAllGroupUsers(group_resource_id string, users []string) (
 	return resp.Group, err
 }
 
-func (c *Client) DeleteUserFromGroup(group_resource_id, user_resource_id string) (Group, error) {
+func (c *Client) DeleteGroupUser(group_resource_id, user_resource_id string) (Group, error) {
 	// Deletes user of user_resource_id from group of group_resource_id
 
 	var resp groupResponse
