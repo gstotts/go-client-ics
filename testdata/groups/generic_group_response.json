@@ -1,0 +1,10 @@
+{
+    "group": {
+        "group_id": 10,
+        "resource_id": "divvyusergroup:10",
+        "name": "SuperSquad",
+        "users": 2,
+        "roles": 5,
+        "entitlements_configured": true
+    }
+}
