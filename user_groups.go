@@ -128,8 +128,26 @@ func (c *Client) UpdateGroupRoles(group_resource_id string, role_resource_ids []
 	return resp.Group, err
 }
 
-// func (c *Client) ListGroupEntitlements(group_resource_id string) (Entitlements, error) {}
+func (c *Client) ListGroupEntitlements(group_resource_id string) ([]Entitlement, error) {
+	// Returns a slice of the group's entitlements
 
-// func (c *Client) SetEntitlements() (Entitlements, error) {}
+	var resp Entitlements
+	err := c.makeRequest(http.MethodGet, fmt.Sprintf("/v2/public/entitlements/%s/get", group_resource_id), nil, &resp)
+	return resp.Entitlements, err
+}
 
-// func (c *Client) ListUserEntitlement(user_resource_id, module_name string) (Entitlement, error) {}
+func (c *Client) SetEntitlements(group_resource_ids []int, entitlements []Entitlement) ([]Entitlement, error) {
+	// Sets entitlements for the group
+
+	var resp Entitlements
+	err := c.makeRequest(http.MethodGet, "/v2/public/entitlements/set", setEntitlementRequest{GroupIDs: group_resource_ids, Entitelments: entitlements}, &resp)
+	return resp.Entitlements, err
+}
+
+func (c *Client) ListUserEntitlement(user_resource_id, module_name string) (UserEntitlement, error) {
+	// Returns the status of the specific entitlement for the user
+
+	var resp UserEntitlement
+	err := c.makeRequest(http.MethodGet, fmt.Sprintf("/v2/public/entitlements/%s/%s/get", user_resource_id, module_name), nil, &resp)
+	return resp, err
+}

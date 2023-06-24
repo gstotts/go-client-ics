@@ -32,3 +32,21 @@ type deleteUserFromGroupRequest struct {
 type updateGroupRolesRequest struct {
 	ResourceIDs []string `json:"resource_ids"`
 }
+
+type Entitlements struct {
+	Entitlements []Entitlement `json:"entitlements"`
+}
+
+type Entitlement struct {
+	Namespace string `json:"namespace"`
+	Role      string `json:"role"`
+}
+
+type UserEntitlement struct {
+	Entitlement string `json:"entitlement"`
+}
+
+type setEntitlementRequest struct {
+	GroupIDs     []int         `json:"group_ids"`
+	Entitelments []Entitlement `json:"entitlements"`
+}
