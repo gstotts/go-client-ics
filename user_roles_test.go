@@ -11,14 +11,44 @@ import (
 
 func TestUserRoles_CreateRole(t *testing.T) {
 	setup()
+	mux.HandleFunc("/v2/public/role/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("roles/role_response.json"))
+	})
 
+	resp, err := client.CreateRole(Role{
+		Name:           "Test Role",
+		Description:    "Role defines permissions to scopes",
+		AllPermissions: false,
+		View:           false,
+		Provision:      true,
+		Manage:         false,
+		Delete:         true,
+		AddCloud:       false,
+		DeleteCloud:    true,
+		GlobalScope:    false,
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, "divvyrole:1:24", resp.ResourceID)
+	assert.Equal(t, "Test Role", resp.Name)
+	assert.Equal(t, "Role defines permissions to scopes", resp.Description)
+	assert.False(t, resp.AllPermissions)
+	assert.False(t, resp.View)
+	assert.True(t, resp.Provision)
+	assert.False(t, resp.Manage)
+	assert.True(t, resp.Delete)
+	assert.False(t, resp.AddCloud)
+	assert.True(t, resp.DeleteCloud)
+	assert.False(t, resp.GlobalScope)
 	teardown()
 }
 
 func TestUserRoles_GetRoleByID(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/roles/list", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, getJSONFile("roles/list_roles_response.json"))
@@ -34,7 +64,7 @@ func TestUserRoles_GetRoleByID(t *testing.T) {
 func TestUserRoles_UpdateRole(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/role/divvyrole:1:24/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		req_body := Role{}
 		err := json.NewDecoder(r.Body).Decode(&req_body)
@@ -76,7 +106,7 @@ func TestUserRoles_UpdateRole(t *testing.T) {
 func TestUserRoles_UpdateRole_InvalidRequestBody_BadgeFilterOperator(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/role/divvyrole:1:9/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		req_body := Role{}
 		err := json.NewDecoder(r.Body).Decode(&req_body)
@@ -107,7 +137,7 @@ func TestUserRoles_UpdateRole_InvalidRequestBody_BadgeFilterOperator(t *testing.
 func TestUserRoles_UpdateRole_InvalidRequestBody_Groups(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/role/divvyrole:1:9/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		req_body := Role{}
 		err := json.NewDecoder(r.Body).Decode(&req_body)
@@ -139,7 +169,7 @@ func TestUserRoles_UpdateRole_InvalidRequestBody_Groups(t *testing.T) {
 func TestUserRoles_UpdateRole_InvalidRequestBody_ResourceGroupScopes(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/role/divvyrole:1:9/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		req_body := Role{}
 		err := json.NewDecoder(r.Body).Decode(&req_body)
@@ -170,7 +200,7 @@ func TestUserRoles_UpdateRole_InvalidRequestBody_ResourceGroupScopes(t *testing.
 func TestUserRoles_UpdateRole_InvalidRequestBody_BadgeScopes(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/role/divvyrole:1:9/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		req_body := Role{}
 		err := json.NewDecoder(r.Body).Decode(&req_body)
@@ -201,69 +231,67 @@ func TestUserRoles_UpdateRole_InvalidRequestBody_BadgeScopes(t *testing.T) {
 func TestUserRoles_ListRoles(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/roles/list", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, getJSONFile("roles/list_roles_response.json"))
 	})
+
+	testCases := []struct {
+		resource_id           string
+		name                  string
+		desc                  string
+		badgeoperator         string
+		allperms              bool
+		view                  bool
+		provision             bool
+		manage                bool
+		delete                bool
+		add_cloud             bool
+		delete_cloud          bool
+		global_scope          bool
+		cloud_scopes          []string
+		resource_group_scopes []string
+		badge_Scopes          []string
+		groups                []string
+	}{
+		{"divvyrole:1:20", "Random Role 213", "Allows stuff", "AND", true, false, false, false, false, true, false, true, []string{}, []string{}, []string{}, []string{}},
+		{"divvyrole:1:21", "Global Read Only", "Allows only read for all", "AND", false, true, false, true, false, false, false, true, []string{"divvyorganizationservice:1"}, []string{"resourcegroup:1:"}, []string{"cloud_type:GCP"}, []string{"divvyusergroup:20"}},
+		{"divvyrole:1:22", "Updated Name 5", "Updated Description 5", "OR", false, false, true, false, true, true, true, false, []string{}, []string{}, []string{}, []string{"divvyusergroup:20"}},
+	}
+
 	roles, err := client.ListRoles()
 	assert.NoError(t, err)
 	assert.Len(t, roles.Roles, 3)
-	assert.Equal(t, "divvyrole:1:20", roles.Roles[0].ResourceID)
-	assert.Equal(t, "divvyrole:1:21", roles.Roles[1].ResourceID)
-	assert.Equal(t, "divvyrole:1:22", roles.Roles[2].ResourceID)
-	assert.Equal(t, "Random Role 213", roles.Roles[0].Name)
-	assert.Equal(t, "Global Read Only", roles.Roles[1].Name)
-	assert.Equal(t, "Updated Name 5", roles.Roles[2].Name)
-	assert.Equal(t, "Allows stuff", roles.Roles[0].Description)
-	assert.Equal(t, "Allows only read for all", roles.Roles[1].Description)
-	assert.Equal(t, "Updated Description 5", roles.Roles[2].Description)
-	assert.Equal(t, "AND", roles.Roles[0].BadgeFilterOperator)
-	assert.Equal(t, "AND", roles.Roles[1].BadgeFilterOperator)
-	assert.Equal(t, "OR", roles.Roles[2].BadgeFilterOperator)
-	assert.True(t, roles.Roles[0].AllPermissions)
-	assert.False(t, roles.Roles[1].AllPermissions)
-	assert.False(t, roles.Roles[2].AllPermissions)
-	assert.True(t, roles.Roles[0].GlobalScope)
-	assert.True(t, roles.Roles[1].GlobalScope)
-	assert.False(t, roles.Roles[2].GlobalScope)
-	assert.False(t, roles.Roles[0].View)
-	assert.True(t, roles.Roles[1].View)
-	assert.False(t, roles.Roles[2].View)
-	assert.False(t, roles.Roles[0].Provision)
-	assert.False(t, roles.Roles[1].Provision)
-	assert.True(t, roles.Roles[2].Provision)
-	assert.False(t, roles.Roles[0].Manage)
-	assert.True(t, roles.Roles[1].Manage)
-	assert.False(t, roles.Roles[2].Manage)
-	assert.False(t, roles.Roles[0].Delete)
-	assert.False(t, roles.Roles[1].Delete)
-	assert.True(t, roles.Roles[2].Delete)
-	assert.False(t, roles.Roles[0].DeleteCloud)
-	assert.False(t, roles.Roles[1].DeleteCloud)
-	assert.True(t, roles.Roles[2].DeleteCloud)
-	assert.Empty(t, roles.Roles[0].CloudScopes)
-	assert.Empty(t, roles.Roles[2].CloudScopes)
-	assert.Empty(t, roles.Roles[0].ResourceGroupScopes)
-	assert.Empty(t, roles.Roles[2].ResourceGroupScopes)
-	assert.Empty(t, roles.Roles[0].BadgeScopes)
-	assert.Empty(t, roles.Roles[2].BadgeScopes)
-	assert.ElementsMatch(t, []string{"divvyorganizationservice:1"}, roles.Roles[1].CloudScopes)
-	assert.ElementsMatch(t, []string{"resourcegroup:1:"}, roles.Roles[1].ResourceGroupScopes)
-	assert.ElementsMatch(t, []string{"cloud_type:GCP"}, roles.Roles[1].BadgeScopes)
-	assert.ElementsMatch(t, []string{"divvyusergroup:20"}, roles.Roles[1].Groups)
-	assert.Empty(t, roles.Roles[2].CloudScopes)
-	assert.Empty(t, roles.Roles[2].ResourceGroupScopes)
-	assert.Empty(t, roles.Roles[2].BadgeScopes)
-	assert.Empty(t, roles.Roles[0].Groups)
 
+	for i, tc := range testCases {
+		t.Run(tc.resource_id, func(t *testing.T) {
+			assert.Equal(t, tc.resource_id, roles.Roles[i].ResourceID)
+			assert.Equal(t, tc.name, roles.Roles[i].Name)
+			assert.Equal(t, tc.desc, roles.Roles[i].Description)
+			assert.Equal(t, tc.badgeoperator, roles.Roles[i].BadgeFilterOperator)
+			assert.Equal(t, tc.allperms, roles.Roles[i].AllPermissions)
+			assert.Equal(t, tc.view, roles.Roles[i].View)
+			assert.Equal(t, tc.provision, roles.Roles[i].Provision)
+			assert.Equal(t, tc.manage, roles.Roles[i].Manage)
+			assert.Equal(t, tc.delete, roles.Roles[i].Delete)
+			assert.Equal(t, tc.add_cloud, roles.Roles[i].AddCloud)
+			assert.Equal(t, tc.delete_cloud, roles.Roles[i].DeleteCloud)
+			assert.Equal(t, tc.global_scope, roles.Roles[i].GlobalScope)
+			assert.Equal(t, tc.cloud_scopes, roles.Roles[i].CloudScopes)
+			assert.Equal(t, tc.resource_group_scopes, roles.Roles[i].ResourceGroupScopes)
+			assert.Equal(t, tc.badge_Scopes, roles.Roles[i].BadgeScopes)
+			assert.Equal(t, tc.groups, roles.Roles[i].Groups)
+
+		})
+	}
 	teardown()
 }
 
 func TestUserRoles_UpdateRoleScope(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/roles/divvyrole:1:24/scope/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		var req_body rolesUpdateScopeRequest
 		err := json.NewDecoder(r.Body).Decode(&req_body)
@@ -284,7 +312,7 @@ func TestUserRoles_UpdateRoleScope(t *testing.T) {
 func TestUserRoles_UpdateRoleUserGroups(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/roles/divvyrole:1:24/groups/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		var req_body rolesUpdateUserGroupsRequest
 		err := json.NewDecoder(r.Body).Decode(&req_body)
@@ -303,7 +331,7 @@ func TestUserRoles_UpdateRoleUserGroups(t *testing.T) {
 func TestUserRoles_UpdateRoleBadges(t *testing.T) {
 	setup()
 	mux.HandleFunc("/v2/public/roles/divvyrole:1:24/AND/badges/update", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'DELETE', got %s", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 		assert.NotNil(t, r.Body)
 		var req_body Badges
 		err := json.NewDecoder(r.Body).Decode(&req_body)

@@ -1,0 +1,20 @@
+{
+    "users": [
+        {
+            "resource_id": "divvyuser:2:",
+            "name": "test user",
+            "user_id": 2,
+            "organization_admin": false,
+            "domain_admin": false,
+            "domain_viewer": false,
+            "email_address": "test@testington.tst",
+            "username": "test",
+            "organization_name": "Default Organization",
+            "organization_id": 1,
+            "two_factor_enabled": true,
+            "two_factor_required": false,
+            "navigation_blacklist": [],
+            "aws_default_external_id": ""
+        }
+    ]
+}
