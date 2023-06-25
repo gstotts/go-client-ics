@@ -3,6 +3,7 @@ package insightcloudsecClient
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -337,7 +338,7 @@ func TestGroups_ListGroupEntitlements(t *testing.T) {
 				assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
 				w.Header().Set("content-type", "application/json")
 				w.WriteHeader(http.StatusOK)
-				fmt.Fprint(w, getJSONFile(fmt.Sprintf("groups/list_group_entitlements_%s.json", tc.group_id)))
+				fmt.Fprint(w, getJSONFile(fmt.Sprintf("groups/list_group_entitlements_%s.json", strings.Split(tc.group_id, ":")[1])))
 			})
 
 			resp, err := client.ListGroupEntitlements(tc.group_id)
@@ -363,7 +364,7 @@ func TestGroups_ListGroupEntitlements(t *testing.T) {
 	}
 }
 
-func TestGroups_SetEntitelments(t *testing.T) {
+func TestGroups_SetEntitlements(t *testing.T) {
 	testCases := []struct {
 		test_name    string
 		resp_file    string
