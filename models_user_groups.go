@@ -48,5 +48,5 @@ type UserEntitlement struct {
 
 type setEntitlementRequest struct {
 	GroupIDs     []int         `json:"group_ids"`
-	Entitelments []Entitlement `json:"entitlements"`
+	Entitlements []Entitlement `json:"entitlements"`
 }

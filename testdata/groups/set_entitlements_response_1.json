@@ -1,0 +1,15 @@
+[
+    {
+        "entitlements": [
+            {
+                "namespace": "botfactory",
+                "role": "viewer"
+            },
+            {
+                "namespace": "iac",
+                "role": "admin"
+            }
+        ],
+        "group_id": 24
+    }
+]

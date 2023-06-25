@@ -231,21 +231,23 @@ func TestGroups_ListGroupUsers(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		setup()
-		mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/users/list", func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
-			w.Header().Set("content-type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprint(w, getJSONFile("groups/list_group_users.json"))
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/users/list", func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile("groups/list_group_users.json"))
+			})
+			users, err := client.ListGroupUsers(tc.group_id)
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tc.expected_count, users.TotalCount)
+			}
+			teardown()
 		})
-		users, err := client.ListGroupUsers(tc.group_id)
-		if tc.err_expected {
-			assert.Error(t, err)
-		} else {
-			assert.NoError(t, err)
-			assert.Equal(t, tc.expected_count, users.TotalCount)
-		}
-		teardown()
 	}
 }
 
@@ -261,22 +263,24 @@ func TestGroups_ListGroupRoles(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		setup()
-		mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/roles/list", func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
-			w.Header().Set("content-type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprint(w, getJSONFile("groups/list_group_roles.json"))
-		})
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/roles/list", func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile("groups/list_group_roles.json"))
+			})
 
-		roles, err := client.ListGroupRoles(tc.group_id)
-		if tc.err_expected {
-			assert.Error(t, err)
-		} else {
-			assert.NoError(t, err)
-			assert.Equal(t, tc.expected_count, len(roles.Roles))
-		}
-		teardown()
+			roles, err := client.ListGroupRoles(tc.group_id)
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tc.expected_count, len(roles.Roles))
+			}
+			teardown()
+		})
 	}
 }
 
@@ -292,60 +296,178 @@ func TestGroups_UpdateGroupRoles(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		setup()
-		mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/roles/update", func(w http.ResponseWriter, r *http.Request) {
-			assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
-			w.Header().Set("content-type", "application/json")
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprint(w, getJSONFile("groups/generic_group_response.json"))
-		})
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc("/v2/prototype/group/divvyusergroup:10/roles/update", func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile("groups/generic_group_response.json"))
+			})
 
-		group, err := client.UpdateGroupRoles(tc.group_id, tc.resource_ids)
-		if tc.err_expected {
-			assert.Error(t, err)
-		} else {
-			assert.NoError(t, err)
-			assert.Equal(t, len(tc.resource_ids), group.Roles)
-		}
-		teardown()
+			group, err := client.UpdateGroupRoles(tc.group_id, tc.resource_ids)
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, len(tc.resource_ids), group.Roles)
+			}
+			teardown()
+		})
 	}
 }
 
-// func TestGroups_ListGroupEntitlements(t *testing.T) {
-// 	testCases := []struct {
-// 	}{
-// 		{},
-// 	}
+func TestGroups_ListGroupEntitlements(t *testing.T) {
+	testCases := []struct {
+		test_name    string
+		group_id     string
+		viewer_ents  []string
+		editor_ents  []string
+		admin_ents   []string
+		err_expected bool
+	}{
+		{"Valid Request", "divvyusergroup:21", []string{"applications", "botfactory", "clusters", "groups"}, []string{"iam"}, []string{"iac", "hva"}, false},
+		{"Invalid Group", "divvyusergroup:0000", []string{}, []string{}, []string{}, true},
+	}
 
-// 	for _, tc := range testCases {
-// 		setup()
+	for _, tc := range testCases {
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc(fmt.Sprintf("/v2/public/entitlements/%s/get", tc.group_id), func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile(fmt.Sprintf("groups/list_group_entitlements_%s.json", tc.group_id)))
+			})
 
-// 		teardown()
-// 	}
-// }
+			resp, err := client.ListGroupEntitlements(tc.group_id)
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				for _, ent := range resp {
+					switch ent.Role {
+					case "viewer":
+						assert.Contains(t, tc.viewer_ents, ent.Namespace)
+					case "editor":
+						assert.Contains(t, tc.editor_ents, ent.Namespace)
+					case "admin":
+						assert.Contains(t, tc.admin_ents, ent.Namespace)
+					default:
+						assert.Contains(t, "disabled", ent.Role)
+					}
+				}
+			}
+			teardown()
+		})
+	}
+}
 
-// func TestGroups_SetEntitelments(t *testing.T) {
-// 	testCases := []struct {
-// 	}{
-// 		{},
-// 	}
+func TestGroups_SetEntitelments(t *testing.T) {
+	testCases := []struct {
+		test_name    string
+		resp_file    string
+		group_ids    []int
+		viewer       []string
+		editor       []string
+		admin        []string
+		err_expected bool
+	}{
+		{"Valid Request", "1", []int{24}, []string{"botfactory"}, nil, []string{"iac"}, false},
+	}
 
-// 	for _, tc := range testCases {
-// 		setup()
+	for _, tc := range testCases {
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc(("/v2/public/entitlements/set"), func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile(fmt.Sprintf("groups/set_entitlements_response_%s.json", tc.resp_file)))
+			})
 
-// 		teardown()
-// 	}
-// }
+			// Build the entitlements
+			e := []Entitlement{}
+			// Add Viewer Entitlements
+			if tc.viewer != nil {
+				for _, item := range tc.viewer {
+					e = append(e, Entitlement{
+						Namespace: item,
+						Role:      "viewer",
+					})
+				}
+			}
+			// Add Editor Entitlements
+			if tc.editor != nil {
+				for _, item := range tc.editor {
+					e = append(e, Entitlement{
+						Namespace: item,
+						Role:      "editor",
+					})
+				}
+			}
+			// Add Admin Entitltements
+			if tc.admin != nil {
+				for _, item := range tc.viewer {
+					e = append(e, Entitlement{
+						Namespace: item,
+						Role:      "admin",
+					})
+				}
+			}
 
-// func TestGroups_ListUserEntitlement(t *testing.T) {
-// 	testCases := []struct {
-// 	}{
-// 		{},
-// 	}
+			resp, err := client.SetEntitlements(tc.group_ids, e)
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				for _, ent := range resp {
+					switch ent.Role {
+					case "viewer":
+						assert.Contains(t, tc.viewer, ent.Namespace)
+					case "editor":
+						assert.Contains(t, tc.editor, ent.Namespace)
+					case "admin":
+						assert.Contains(t, tc.admin, ent.Namespace)
+					default:
+						assert.Contains(t, "disabled", ent.Role)
+					}
+				}
+			}
+			teardown()
+		})
+	}
+}
 
-// 	for _, tc := range testCases {
-// 		setup()
+func TestGroups_ListUserEntitlement(t *testing.T) {
+	testCases := []struct {
+		test_name    string
+		user_id      string
+		module       string
+		want         string
+		err_expected bool
+	}{
+		{"Valid Request", "divvyuser:1", "iac", "admin", false},
+	}
 
-// 		teardown()
-// 	}
-// }
+	for _, tc := range testCases {
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc(fmt.Sprintf("/v2/public/entitlements/%s/%s/get", tc.user_id, tc.module), func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile("groups/list_user_entitlements.json"))
+			})
+
+			resp, err := client.ListUserEntitlement(tc.user_id, tc.module)
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tc.want, resp.Entitlement)
+			}
+			teardown()
+		})
+	}
+}

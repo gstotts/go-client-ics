@@ -139,9 +139,9 @@ func (c *Client) ListGroupEntitlements(group_resource_id string) ([]Entitlement,
 func (c *Client) SetEntitlements(group_resource_ids []int, entitlements []Entitlement) ([]Entitlement, error) {
 	// Sets entitlements for the group
 
-	var resp Entitlements
-	err := c.makeRequest(http.MethodGet, "/v2/public/entitlements/set", setEntitlementRequest{GroupIDs: group_resource_ids, Entitelments: entitlements}, &resp)
-	return resp.Entitlements, err
+	var resp []Entitlements
+	err := c.makeRequest(http.MethodPost, "/v2/public/entitlements/set", setEntitlementRequest{GroupIDs: group_resource_ids, Entitlements: entitlements}, &resp)
+	return resp[0].Entitlements, err
 }
 
 func (c *Client) ListUserEntitlement(user_resource_id, module_name string) (UserEntitlement, error) {
