@@ -22,7 +22,7 @@ func (c *Client) AddGroupMapping(auth_server_id int, mapping []GroupMapping) err
 func (c *Client) UpdateAllGroupMappings(auth_server_id int, mapping []GroupMapping) error {
 	// Overwrites the group mapping with the given mapping list
 
-	return c.makeRequest(http.MethodGet, fmt.Sprintf("/v2/prototype/authenticationserver/%d/update_group_mapping", auth_server_id), mapping, nil)
+	return c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/prototype/authenticationserver/%d/update_group_mapping", auth_server_id), mapping, nil)
 }
 
 func (c *Client) DeleteGroupMapping(auth_server_id int, mapping []GroupMapping) error {
