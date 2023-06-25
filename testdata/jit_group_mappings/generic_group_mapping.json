@@ -1,0 +1,14 @@
+[
+    {
+        "local_group_name": "Domain Admins",
+        "remote_group_name": "Administrators"
+    },
+    {
+        "local_group_name": "Domain Viewers",
+        "remote_group_name": "ReadOnlyAdmins"
+    },
+    {
+        "local_group_name": "Organization Admins",
+        "remote_group_name": "YourMommasAdmins"
+    }
+]
