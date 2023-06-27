@@ -28,6 +28,7 @@ func (c *Client) ListPrincipalActivity(principal_resource_id, start, end string)
 }
 
 func (c *Client) ListPrincipalPermissions(principal_resource_id string) (PrincipalPermissions, error) {
+	return PrincipalPermissions{}, nil
 }
 
 func validateDateFormats(start, end string) bool {
