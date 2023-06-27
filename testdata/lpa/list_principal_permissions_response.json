@@ -1,0 +1,184 @@
+{
+    "end": "2023-06-26",
+    "page": 1,
+    "permission_status_counts": {
+        "total_permission_count": 20,
+        "unassessed_permission_count": 0,
+        "unused_permission_count": 0,
+        "used_permission_count": 20
+    },
+    "permissions": [
+        {
+            "action": "ec2.describeaccountattributes",
+            "category": "list",
+            "count": 9,
+            "last_executed_date": "2023-06-26T23:00:38",
+            "permission": "ec2:describeaccountattributes",
+            "status": "Used"
+        },
+        {
+            "action": "iam.attachgrouppolicy",
+            "category": "permissions",
+            "count": 1,
+            "last_executed_date": "2023-06-26T23:00:55",
+            "permission": "iam:attachgrouppolicy",
+            "status": "Used"
+        },
+        {
+            "action": "iam.attachrolepolicy",
+            "category": "permissions",
+            "count": 2,
+            "last_executed_date": "2023-06-26T23:00:55",
+            "permission": "iam:attachrolepolicy",
+            "status": "Used"
+        },
+        {
+            "action": "iam.attachuserpolicy",
+            "category": "permissions",
+            "count": 1,
+            "last_executed_date": "2023-06-26T23:00:39",
+            "permission": "iam:attachuserpolicy",
+            "status": "Used"
+        },
+        {
+            "action": "iam.createpolicy",
+            "category": "permissions",
+            "count": 2,
+            "last_executed_date": "2023-06-26T23:00:39",
+            "permission": "iam:createpolicy",
+            "status": "Used"
+        },
+        {
+            "action": "iam.createrole",
+            "category": "permissions",
+            "count": 6,
+            "last_executed_date": "2023-06-26T23:00:54",
+            "permission": "iam:createrole",
+            "status": "Used"
+        },
+        {
+            "action": "iam.createuser",
+            "category": "permissions",
+            "count": 1,
+            "last_executed_date": "2023-06-26T23:00:39",
+            "permission": "iam:createuser",
+            "status": "Used"
+        },
+        {
+            "action": "iam.getaccountpasswordpolicy",
+            "category": "read",
+            "count": 7,
+            "last_executed_date": "2023-06-26T22:56:49",
+            "permission": "iam:getaccountpasswordpolicy",
+            "status": "Used"
+        },
+        {
+            "action": "iam.getgroup",
+            "category": "read",
+            "count": 56,
+            "last_executed_date": "2023-06-26T22:56:49",
+            "permission": "iam:getgroup",
+            "status": "Used"
+        },
+        {
+            "action": "iam.getinstanceprofile",
+            "category": "read",
+            "count": 7,
+            "last_executed_date": "2023-06-26T22:56:50",
+            "permission": "iam:getinstanceprofile",
+            "status": "Used"
+        },
+        {
+            "action": "iam.getpolicy",
+            "category": "read",
+            "count": 68,
+            "last_executed_date": "2023-06-26T23:00:55",
+            "permission": "iam:getpolicy",
+            "status": "Used"
+        },
+        {
+            "action": "iam.getpolicyversion",
+            "category": "read",
+            "count": 39,
+            "last_executed_date": "2023-06-26T23:00:39",
+            "permission": "iam:getpolicyversion",
+            "status": "Used"
+        },
+        {
+            "action": "iam.getrole",
+            "category": "read",
+            "count": 17,
+            "last_executed_date": "2023-06-26T23:00:54",
+            "permission": "iam:getrole",
+            "status": "Used"
+        },
+        {
+            "action": "iam.getuser",
+            "category": "read",
+            "count": 22,
+            "last_executed_date": "2023-06-26T23:00:39",
+            "permission": "iam:getuser",
+            "status": "Used"
+        },
+        {
+            "action": "iam.listattachedrolepolicies",
+            "category": "list",
+            "count": 16,
+            "last_executed_date": "2023-06-26T23:00:55",
+            "permission": "iam:listattachedrolepolicies",
+            "status": "Used"
+        },
+        {
+            "action": "iam.listattacheduserpolicies",
+            "category": "list",
+            "count": 1,
+            "last_executed_date": "2023-06-26T23:00:39",
+            "permission": "iam:listattacheduserpolicies",
+            "status": "Used"
+        },
+        {
+            "action": "iam.listentitiesforpolicy",
+            "category": "list",
+            "count": 29,
+            "last_executed_date": "2023-06-26T23:00:55",
+            "permission": "iam:listentitiesforpolicy",
+            "status": "Used"
+        },
+        {
+            "action": "iam.listpolicies",
+            "category": "list",
+            "count": 252,
+            "last_executed_date": "2023-06-26T22:56:50",
+            "permission": "iam:listpolicies",
+            "status": "Used"
+        },
+        {
+            "action": "iam.listrolepolicies",
+            "category": "list",
+            "count": 8,
+            "last_executed_date": "2023-06-26T23:00:55",
+            "permission": "iam:listrolepolicies",
+            "status": "Used"
+        },
+        {
+            "action": "sts.getcalleridentity",
+            "category": "read",
+            "count": 18,
+            "last_executed_date": "2023-06-26T23:00:38",
+            "permission": "sts:getcalleridentity",
+            "status": "Used"
+        }
+    ],
+    "principal": {
+        "name": "my-account",
+        "resource_id": "serviceuser:4:FFFFFFFFFFF:",
+        "resource_type": "serviceuser"
+    },
+    "start": "2023-03-28",
+    "total_pages": 1,
+    "warnings": {
+        "Day not finished processing, try again later.": [
+            "2023-03-28"
+        ]
+    }
+}

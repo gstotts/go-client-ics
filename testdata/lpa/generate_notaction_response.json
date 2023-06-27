@@ -1,0 +1,18 @@
+{
+    "policy": {
+        "Statement": [
+            {
+                "Effect": "Deny",
+                "NotAction": [
+                    "s3:GetObject",
+                    "s3:Delete*"
+                ],
+                "Resource": [
+                    "*"
+                ],
+                "Sid": "LPADenyUnusedPermissions"
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+}
