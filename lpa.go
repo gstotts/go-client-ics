@@ -28,7 +28,32 @@ func (c *Client) ListPrincipalActivity(principal_resource_id, start, end string)
 }
 
 func (c *Client) ListPrincipalPermissions(principal_resource_id string) (PrincipalPermissions, error) {
-	return PrincipalPermissions{}, nil
+	// Lists used and unused permissions based on the given principal
+
+	var resp PrincipalPermissions
+	err := c.makeRequest(http.MethodGet, fmt.Sprintf("/v3/lpa/principals/%s/permissions", principal_resource_id), nil, &resp)
+
+	return resp, err
+}
+
+func (c *Client) GenerateDenyNotActionPolicy(principal_resource_id, start, end string) (RemediationPolicy, error) {
+
+	if start == "" || end == "" {
+		return RemediationPolicy{}, fmt.Errorf("start and end must be provided (formatted string as YYYY-MM-DD)")
+	}
+
+	// Validate start is proper format
+	if !validateDateFormats(start, end) {
+		return RemediationPolicy{}, fmt.Errorf("start/end time is not of format YYYY-MM-DD.  Got %s and %s", start, end)
+	}
+
+	path_and_query := fmt.Sprintf("/v3/lpa/principals/%s/access-remediate-policy?start=%s&end=%s", principal_resource_id, start, end)
+
+	// Make Request
+	var resp RemediationPolicy
+	err := c.makeRequest(http.MethodGet, path_and_query, nil, &resp)
+
+	return resp, err
 }
 
 func validateDateFormats(start, end string) bool {
