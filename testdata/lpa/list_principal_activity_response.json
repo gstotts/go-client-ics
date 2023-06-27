@@ -1,0 +1,33 @@
+{
+    "executed_actions": [
+        {
+            "action": "access-analyzer.ListAnalyzers",
+            "count": 11211,
+            "last_executed_date": "2022-08-15T23:47:14"
+        },
+        {
+            "action": "acm.ListCertificates",
+            "count": 22211,
+            "last_executed_date": "2022-08-15T23:51:35"
+        },
+        {
+            "action": "airflow.ListEnvironments",
+            "count": 11429,
+            "last_executed_date": "2022-08-15T23:45:13"
+        }
+    ],
+    "metadata": {
+        "errors": []
+    },
+    "principal": {
+        "account_id": "123456789101",
+        "cloud_type_id": "AWS",
+        "name": "ics-assume-role-test",
+        "namespace_id": "arn:aws:iam::123456789101:role/ics-assume-role-test",
+        "organization_id": 1,
+        "organization_service_id": 4,
+        "provider_id": "FFFFFFFFFFF",
+        "resource_id": "serviceuser:12:FFFFFFFFFFF:",
+        "resource_type": "serviceuser"
+    }
+}
