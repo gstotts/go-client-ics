@@ -19,7 +19,7 @@ type Principal struct {
 }
 
 type Metadata struct {
-	Errors Errs `json:"errors"`
+	Errors []Errs `json:"errors"`
 }
 
 type Errs struct {
@@ -35,7 +35,7 @@ type PrincipalActions struct {
 type PrincipalPermissions struct {
 	End          string                 `json:"end"`
 	Page         int                    `json:"page"`
-	Permissions  Permissions            `json:"permissions"`
+	Permissions  []Permissions          `json:"permissions"`
 	StatusCounts PermissionStatusCounts `json:"permission_status_counts,omitempty"`
 	Principal    Principal              `json:"principal"`
 	Start        string                 `json:"start"`

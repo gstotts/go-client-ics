@@ -60,7 +60,7 @@ func validateDateFormats(start, end string) bool {
 	_, err := time.Parse("2006-01-02", start)
 	_, err2 := time.Parse("2006-01-02", end)
 
-	if err != nil || err2 != nil {
+	if err == nil && err2 == nil {
 		return true
 	}
 
