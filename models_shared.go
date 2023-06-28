@@ -17,3 +17,8 @@ type Badge struct {
 type Badges struct {
 	Badges []Badge `json:"badges"`
 }
+
+// WhitelabelImage
+type WhitelabelImage struct {
+	Image string `json:"image"`
+}
