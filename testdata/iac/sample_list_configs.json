@@ -1,0 +1,22 @@
+[{
+    "id": 1,
+    "organization_id": 1,
+    "name": "Initial Testing - AWS Foundational",
+    "description": "Initial IaC Scan of AWS Foundational Security Best Practices",
+    "pack_id": 45,
+    "source": "backoffice",
+    "insights_blacklist": ["backoffice:27", "backoffice:7"],
+    "insights_warn_only": ["backoffice:55", "backoffice:72"],
+    "slack_channel": null,
+    "email_recipients": [],
+    "last_build_at": null,
+    "created_at": "2023-06-28T03:07:37Z",
+    "last_modified": "2023-06-28T03:07:37Z",
+    "total_builds": 0,
+    "success_count": 0,
+    "failure_count": 0,
+    "consumption_url": "http://localhost:8001/v3/iac/scan",
+    "favorite": false,
+    "tfc_count": 0,
+    "local_exceptions_enabled": true
+}]
