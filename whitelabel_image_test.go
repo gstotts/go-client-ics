@@ -22,7 +22,7 @@ func TestWhitelabel_SetCustomImage(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.test_name, func(t *testing.T) {
 			setup()
-			mux.HandleFunc("/v2/public/whiltelabel/set-custom-logo", func(w http.ResponseWriter, r *http.Request) {
+			mux.HandleFunc("/v2/whitelabel/set-custom-logo", func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
 				w.Header().Set("content-type", "application/json")
 				w.WriteHeader(http.StatusOK)
