@@ -73,7 +73,7 @@ func (c *Client) ListCloudsWithBadges() ([]BadgedCloud, error) {
 	return resp, err
 }
 
-func (c *Client) ListResourceBadgeCount(resource_ids []string) ([]BadgeCount, error) {
+func (c *Client) ListResourcesBadgeCount(resource_ids []string) ([]BadgeCount, error) {
 	// Returns a list of badge counts for all resources
 
 	var resp BadgeResourceCount
