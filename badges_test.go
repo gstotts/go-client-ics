@@ -16,7 +16,31 @@ func TestBadges_DeleteBadges(t *testing.T) {}
 
 func TestBadges_ListResourceBadges(t *testing.T) {}
 
-func TestBadges_ListCloudsWithBadges(t *testing.T) {}
+func TestBadges_ListCloudsWithBadges(t *testing.T) {
+	desired_results := []struct {
+		id   string
+		name string
+	}{
+		{"divvyorganizationservice:1", "My GCP"},
+		{"divvyorganizationservice:3", "My AWS Org Root"},
+		{"divvyorganizationservice:4", "My AWS Dev"},
+	}
+
+	setup()
+	mux.HandleFunc("/v2/public/badge/clouds/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("badges/list_clouds_with_badges.json"))
+	})
+
+	resp, err := client.ListCloudsWithBadges()
+	assert.NoError(t, err)
+	for i, value := range desired_results {
+		assert.Equal(t, value.id, resp[i].ResourceID)
+		assert.Equal(t, value.name, resp[i].Name)
+	}
+	teardown()
+}
 
 func TestBadges_ListResourcesBadgeCount(t *testing.T) {
 	testCases := []struct {
