@@ -4,9 +4,22 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
+func (c *Client) GetInsight(insight_id int, insight_source string) (Insight, error) {
+	// Returns the insight of given id and source
+
+	if strings.ToLower(insight_source) != "custom" && strings.ToLower(insight_source) != "backoffice" {
+		return Insight{}, fmt.Errorf("insight_source must be one of custom or backoffice, got: %s", insight_source)
+	}
+	var resp Insight
+	err := c.makeRequest(http.MethodGet, fmt.Sprintf("/v2/public/insights/%d/%s", insight_id, strings.ToLower(insight_source)), nil, &resp)
+	return resp, err
+}
+
 func (c *Client) ListInsights() ([]Insight, error) {
+	//Returns a list of all insights
 
 	var resp []Insight
 	err := c.makeRequest(http.MethodGet, "/v2/public/insights/list", nil, &resp)
