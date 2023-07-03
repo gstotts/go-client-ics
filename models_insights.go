@@ -29,7 +29,7 @@ type Insight struct {
 	Name                   string                 `json:"name"`
 	Notes                  string                 `json:"notes"`
 	Released               string                 `json:"released"`
-	ResourceGroupBlacklist string                 `json:"resource_group_blacklist"`
+	ResourceGroupBlacklist []string               `json:"resource_group_blacklist"`
 	ResourceTypes          []string               `json:"resource_types"`
 	Results                int                    `json:"results,omitempty"`
 	RiskLayers             []string               `json:"risk_layers,omitempty"`
