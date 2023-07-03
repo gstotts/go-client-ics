@@ -1,6 +1,9 @@
 package insightcloudsecClient
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 type Insight struct {
 	All                    int                    `json:"all,omitempty"`
@@ -10,7 +13,7 @@ type Insight struct {
 	ByCloud                map[int]map[string]int `json:"by_cloud,omitempty"`
 	ByResourceGroup        map[string]int         `json:"by_resource_group,omitempty"`
 	ByType                 map[string]int         `json:"by_type,omitempty"`
-	CacheUpdatedAt         time.Time              `json:"cache_updated_at,omitempty"`
+	CacheUpdatedAt         CacheTime              `json:"cache_updated_at,omitempty"`
 	Counts                 InsightCounts          `json:"counts"`
 	Disabled               bool                   `json:"disabled,omitempty"`
 	Description            string                 `json:"description"`
@@ -54,4 +57,21 @@ type InsightCounts struct {
 	Exemptions      int                    `json:"exemptions"`
 	Results         int                    `json:"results"`
 	Total           int                    `json:"total"`
+}
+
+type CacheTime time.Time
+
+func (c *CacheTime) UnmarshalJSON(b []byte) error {
+	value := strings.Trim(string(b), `"`)
+	if value == "" || value == "null" {
+		return nil
+	}
+
+	t, err := time.Parse("2006-01-02T03:04:05.000000", value)
+	if err != nil {
+		return err
+	}
+
+	*c = CacheTime(t)
+	return nil
 }
