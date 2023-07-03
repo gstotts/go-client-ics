@@ -65,11 +65,16 @@ func (c *Client) ListResourceBadges(resource_id string) ([]Badge, error) {
 	return resp, err
 }
 
-func (c *Client) ListCloudsWithBadges() ([]BadgedCloud, error) {
+func (c *Client) ListCloudsWithBadges(b []Badge) ([]BadgedCloud, error) {
 	// Retunrs a list of cloud accounts that are badged
 
 	var resp []BadgedCloud
-	err := c.makeRequest(http.MethodPost, "/v2/public/badge/clouds/list", Badges{}, &resp)
+	var payload Badges
+	if b != nil {
+		payload.Badges = b
+	}
+
+	err := c.makeRequest(http.MethodPost, "/v2/public/badge/clouds/list", payload, &resp)
 	return resp, err
 }
 
