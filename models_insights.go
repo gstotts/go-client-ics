@@ -53,7 +53,7 @@ type InsightCounts struct {
 	ByResourceGroup map[string]int         `json:"by_resource_group"`
 	ByType          map[string]int         `json:"by_type"`
 	CacheUpdatedAt  CacheTime              `json:"cache_updated_at"`
-	Duration        time.Duration          `json:"duration"`
+	Duration        string                 `json:"duration"`
 	Exemptions      int                    `json:"exemptions"`
 	Results         int                    `json:"results"`
 	Total           int                    `json:"total"`
