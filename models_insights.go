@@ -43,8 +43,8 @@ type Insight struct {
 }
 
 type Filter struct {
-	Name   string                            `json:"name"`
-	Config map[string]map[string]interface{} `json:"config"`
+	Name   string                 `json:"name"`
+	Config map[string]interface{} `json:"config"`
 }
 
 type InsightCounts struct {
