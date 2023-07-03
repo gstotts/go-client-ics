@@ -1,0 +1,12 @@
+[
+    {
+        "key": "cloud",
+        "value": "azure",
+        "auto_generated": false
+    },
+    {
+        "key": "env",
+        "value": "production",
+        "auto_generated": false
+    }
+]
