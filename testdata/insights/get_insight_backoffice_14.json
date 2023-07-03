@@ -1,0 +1,62 @@
+{
+    "source": "backoffice",
+    "released": "17.06",
+    "inserted_at": "2017-12-07T00:07:18Z",
+    "custom_severity": null,
+    "supported_clouds": [
+        "AWS",
+        "AWS_CHINA",
+        "AWS_GOV"
+    ],
+    "resource_types": [
+        "storagecontainer"
+    ],
+    "notes": "## Overview\n\nWhether they are configured for cloud distribution, file synchronization, or something else, storage containers are primarily used for sharing documents.  For more private, instance-only storage, one should likely be leveraging persistent volumes, or IOPS will suffer as the network overhead of Storage Containers is seldom appropriate for unshared content.\n\n### Remediation\n\nIf the storage container is intended to be secure to the degree that it contains no permissions, it may be appropriate to tag the storage container in accordance to your tagging policies so that it can be excluded from this insight.  Otherwise, it may represent an unnecessary expenditure, and may be terminable.\n\n### Recommended Bot Workflow\n\n- Assign Tag to Resource: Enforce tagging policy by applying a tag to the storage container that exempts it from this insight.\n- Scheduled Deletion: After giving enough time for investigation, schedule the storage container to be deleted.\n\n### Compliance Information\n  - FedRAMP CCM 3.0.1: IVS-11\n  - NIST 800-53 (Rev 4): CM-7(1), CM-8(2)\n  - ISO 27001:2013: A.8.1.1 - Inventory of assets\n  - SOC 2: A1.1, CC6.1, CC7.1\n  - PCI DSS Pack: Requirement 7\n  - NIST Cybersecurity Framework: PR.AC-4\n  - HITRUST v9.4: 0724.07a3Organizational.4, 0814.01n1Organizational.12, 0818.01w3System.12, 0855.01wCMSOrganizational.2, 0856.01wFTIOrganizational.4, 0857.01wHIXOrganizational.1, 11123.01qPCIOrganizational.3, 1114.01h1Organizational.123, 1117.01j1Organizational.23, 1118.01j2Organizational.124, 11192.01cHIXSystem.2, 1164.01cHIESystem.1, 1165.01cPCISystem.1, 1179.01j3Organizational.1, 1402.05i1Organizational.45, 1403.05i1Organizational.67, 1424.05j2Organizational.5, 1427.05jFTIOrganizational.3, 1802.08b1Organizational.3, 19153.06dFTIOrganizational.12, 19910.06cSROrganizational.2\n  - NIST 800-53 (Rev 5): AU-9, AU-10, IR-4 (12)\n  - CSA CCM V4: BCR-08, DSP-16, LOG-02, LOG-08\n  - MITRE Att&ck Mitigation Pack: M1053, M1029\n  - ISO 27001:2022: 5.9: Inventory of information and other associated assets\n  - CIS Controls v8: 1.1: Establish and Maintain Detailed Enterprise Asset Inventory",
+    "risk_layers": [],
+    "updated_at": "2019-08-01T15:15:48Z",
+    "supported_iac_clouds": [
+        "AWS"
+    ],
+    "filters": [
+        {
+            "name": "divvy.filter.bucket_without_permissions",
+            "config": {}
+        }
+    ],
+    "tags": [
+        "security"
+    ],
+    "name": "Storage Container With No Permissions",
+    "resource_group_blacklist": [],
+    "insight_id": 14,
+    "severity": 2,
+    "disabled": false,
+    "description": "Identify storage containers, e.g., AWS S3 buckets, without any permissions which will not be accessible",
+    "meta_data": null,
+    "counts": {
+        "results": 0,
+        "total": 3,
+        "all": 3,
+        "exemptions": 0,
+        "by_type": {
+            "storagecontainer": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 1,
+                "count": 0,
+                "all": 1
+            },
+            "4": {
+                "total": 2,
+                "count": 0,
+                "all": 2
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T06:55:19.954304",
+        "duration": 0.004436791998159606
+    },
+    "membership": [],
+    "favorited": false
+}
