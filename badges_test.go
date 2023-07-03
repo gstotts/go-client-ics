@@ -8,13 +8,60 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBadges_CreateBadge(t *testing.T) {}
+func TestBadges_CreateBadge(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/badges/create", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.WriteHeader(http.StatusNoContent)
+	})
 
-func TestBadges_UpdateCloudBadges(t *testing.T) {}
+	err := client.CreateBadges([]string{"divvyorganizationservice:3"}, []Badge{{Key: "environment", Value: "development"}})
+	assert.NoError(t, err)
+	teardown()
+}
 
-func TestBadges_DeleteBadges(t *testing.T) {}
+func TestBadges_UpdateCloudBadges(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/badges/divvyorganizationservice:3/update", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.WriteHeader(http.StatusNoContent)
+	})
 
-func TestBadges_ListResourceBadges(t *testing.T) {}
+	err := client.UpdateCloudBadges("divvyorganizationservice:3", []Badge{Badge{Key: "environment", Value: "development"}})
+	assert.NoError(t, err)
+	teardown()
+}
+
+func TestBadges_DeleteBadges(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/badges/delete", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	err := client.DeleteBadges([]string{"divvyorganizationservice:3"}, []Badge{{Key: "environment", Value: "development"}})
+	assert.NoError(t, err)
+	teardown()
+}
+
+func TestBadges_ListResourceBadges(t *testing.T) {
+	setup()
+	mux.HandleFunc("/v2/public/badges/divvyorganizationservice:1/list", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method, "Expected method 'POST', got %s", r.Method)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, getJSONFile("badges/list_resource_badges.json"))
+	})
+
+	resp, err := client.ListResourceBadges("divvyorganizationservice:1")
+	assert.NoError(t, err)
+	assert.Equal(t, "cloud", resp[0].Key)
+	assert.Equal(t, "azure", resp[0].Value)
+	assert.Equal(t, false, resp[0].AutGenerated)
+	assert.Equal(t, "env", resp[1].Key)
+	assert.Equal(t, "production", resp[1].Value)
+	assert.Equal(t, false, resp[1].AutGenerated)
+	teardown()
+}
 
 func TestBadges_ListCloudsWithBadges(t *testing.T) {
 	desired_results := []struct {
