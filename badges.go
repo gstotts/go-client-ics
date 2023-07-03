@@ -69,7 +69,7 @@ func (c *Client) ListCloudsWithBadges() ([]BadgedCloud, error) {
 	// Retunrs a list of cloud accounts that are badged
 
 	var resp []BadgedCloud
-	err := c.makeRequest(http.MethodPost, "/v2/public/badge/clouds/list", nil, &resp)
+	err := c.makeRequest(http.MethodPost, "/v2/public/badge/clouds/list", Badges{}, &resp)
 	return resp, err
 }
 
