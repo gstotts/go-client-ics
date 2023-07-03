@@ -80,7 +80,7 @@ func TestBadges_ListCloudsWithBadges(t *testing.T) {
 		fmt.Fprint(w, getJSONFile("badges/list_clouds_with_badges.json"))
 	})
 
-	resp, err := client.ListCloudsWithBadges()
+	resp, err := client.ListCloudsWithBadges(nil)
 	assert.NoError(t, err)
 	for i, value := range desired_results {
 		assert.Equal(t, value.id, resp[i].ResourceID)
