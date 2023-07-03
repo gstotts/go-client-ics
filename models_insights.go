@@ -17,7 +17,7 @@ type Insight struct {
 	Counts                 InsightCounts          `json:"counts"`
 	Disabled               bool                   `json:"disabled,omitempty"`
 	Description            string                 `json:"description"`
-	Duration               time.Duration          `json:"duration,omitempty"`
+	Duration               float64                `json:"duration,omitempty"`
 	CustomSeverity         int                    `json:"custom_severity"`
 	Exemptions             int                    `json:"exemptions,omitempty"`
 	Favorited              bool                   `json:"favorited"`
