@@ -16,6 +16,7 @@ type Clouds struct {
 }
 
 type Cloud struct {
+	client                      *Client
 	ID                          int                        `json:"id"`
 	Name                        string                     `json:"name"`
 	TypeID                      string                     `json:"cloud_type_id"`
