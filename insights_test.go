@@ -43,7 +43,79 @@ func TestInsights_GetInsight(t *testing.T) {
 }
 
 func TestInsights_ListInsights(t *testing.T) {
+	testCases := []struct {
+		test_name     string
+		insight_count int
+		err_expected  bool
+	}{
+		{"Valid_Request", 5, false},
+	}
 
+	for _, tc := range testCases {
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc("/v2/public/insights/list", func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile(fmt.Sprintf("insights/list_insights_partial.json")))
+			})
+			resp, err := client.ListInsights()
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tc.insight_count, len(resp))
+			}
+			teardown()
+		})
+
+	}
 }
 
-func TestInsights_QueryInsights(t *testing.T) {}
+func TestInsights_QueryInsights(t *testing.T) {
+	testCases := []struct {
+		test_name              string
+		detail                 bool
+		labels                 string
+		pack_ids               string
+		resource_types         string
+		expected_in_results    string
+		expected_insight_count int
+		err_expected           bool
+	}{
+		{"Query_Detailed_Security_Instance", true, "security", "", "instance", "Instance Exposing SSH to the Public", 21, false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.test_name, func(t *testing.T) {
+			setup()
+			mux.HandleFunc("/v2/public/insights/list", func(w http.ResponseWriter, r *http.Request) {
+				assert.Equal(t, fmt.Sprintf("%t", tc.detail), r.URL.Query().Get("detail"))
+				if tc.labels != "" {
+					assert.Equal(t, tc.labels, r.URL.Query().Get("labels"))
+				}
+				if tc.pack_ids != "" {
+					assert.Equal(t, tc.pack_ids, r.URL.Query().Get("pack_ids"))
+				}
+				if tc.resource_types != "" {
+					assert.Equal(t, tc.resource_types, r.URL.Query().Get("resource_types"))
+				}
+				assert.Equal(t, http.MethodGet, r.Method, "Expected method 'GET', got %s", r.Method)
+				w.Header().Set("content-type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				fmt.Fprint(w, getJSONFile(fmt.Sprintf("insights/query_%t_%s_%s_%s.json", tc.detail, tc.labels, tc.pack_ids, tc.resource_types)))
+			})
+			resp, err := client.QueryInsights(tc.detail, tc.labels, tc.pack_ids, tc.resource_types)
+			if tc.err_expected {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tc.expected_insight_count, len(resp))
+				assert.Contains(t, resp, tc.expected_in_results)
+			}
+			teardown()
+		})
+
+	}
+}
