@@ -78,16 +78,17 @@ func (c *Client) GetCloudByName(name string) (Cloud, error) {
 	return Cloud{}, fmt.Errorf("unable to find cloud of name: %s", name)
 }
 
-func (c *Client) updateCloudName(cloud_resource_id, new_name string) (Cloud, error) {
-	// Update a cloud to a new name
+func (c *Cloud) Update_Name(new_name string) error {
+	// Updates the name of the cloud
 
-	err := c.makeRequest(http.MethodPost, fmt.Sprintf("/v2/prototype/resource/%s/name/set", cloud_resource_id), map[string]string{"name": new_name}, nil)
+	err := c.client.makeRequest(http.MethodPost, fmt.Sprintf("/v2/prototype/resource/%s/name/set", c.ResourceID), map[string]string{"name": new_name}, nil)
 	if err != nil {
-		return Cloud{}, err
+		return err
 	}
-	return c.GetCloudByID(cloud_resource_id)
+	*c, _ = c.client.GetCloudByID(c.ResourceID)
+	return nil
+	// return c.client.GetCloudByID(c.ResourceID)
 }
 
-func (c *Cloud) Update_Name(new_name string) (Cloud, error) {
-	return c.client.updateCloudName(c.ResourceID, new_name)
+func (c *Cloud) Update(name string, account_number int, authentication_type, cloud_type, session_name, external_id string) {
 }
