@@ -1,0 +1,327 @@
+[
+    {
+        "insight_id": 2,
+        "name": "Cloud Account without Global API Accounting Config (AWS)",
+        "description": "Identify Accounts Without API Accounting Config, Such as AWS CloudTrail, Enabled Across All Regions",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": null,
+        "updated_at": "2019-09-24T17:43:19Z",
+        "tags": [
+            "cis controls",
+            "gdpr",
+            "hipaa",
+            "logging",
+            "pci",
+            "security"
+        ],
+        "resource_types": [
+            "divvyorganizationservice"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.filter.cloud_trail_in_all_regions",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\nGlobal API Accounting Config records API calls for your account and delivers log files to you. The recorded information includes the identity of the API caller, the time of the API call, the source IP address of the API caller, the request parameters, and the response elements returned by the specific cloud service. Global API Accounting provides a history of API calls for each account, including API calls made via the management console, SDKs, command line tools, and other cloud services.\nThis Insight identifies accounts without API Accounting Config, such as AWS CloudTrail, enabled across all regions.\n\n### Supported Clouds\n\n**This Insight supports the following Clouds:**\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Gov\n\n**This Insight supports the following Clouds for Infrastructure as Code:**\n* None\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n## Recommended Remediation\nLeverage Bot automation to identify and monitor cloud accounts that do not have global API Accounting Config in effect.\n### Bot Recommendations\n* Mark Resource Noncompliant: Flag cloud accounts that do not have global API Accounting Config in effect.\n* Send Email/Instant Notification: Notify operations/security team of of cloud accounts that do not have global API Accounting Config in effect. Separately, using cloud badges, identify cloud account owners and notify them of the steps to enable global API Accounting Config.\n\n### CIS Recommended Remediation Steps\n\n**Amazon Web Services**\nPerform the following to enable global (Multi-region) CloudTrail logging:\n\n**From the Console:**\n\n1. Sign in to the AWS Management Console and open the IAM console\n2. Click on _Trails_ on the left navigation pane\n3. Click `Get Started Now` , if presented\n - Click `Add new trail`\n - Enter a trail name in the `Trail name` box\n - Set the `Apply trail to all regions` option to `Yes`\n - Specify an S3 bucket name in the `S3 bucket` box\n - Click `Create`\n4. If one or more trails already exist, select the target trail to enable for global logging\n5. Click the edit icon (pencil) next to `Apply trail to all regions` , Click `Yes` and Click `Save`.\n6. Click the edit icon (pencil) next to `Management Events` click `All` for setting `Read/Write Events` and Click `Save`.\n\n**From the CLI:**\n\n`aws cloudtrail create-trail --name <trail_name> --bucket-name <s3_bucket_for_cloudtrail> --is-multi-region-trail`\n\n`aws cloudtrail update-trail --name <trail_name> --is-multi-region-trail`\n\nNote: Creating CloudTrail via CLI without providing any overriding options configures `Management Events` to set `All` type of `Read/Writes` by default.\n\n### Remediation Reference Links\n**Amazon Web Services**\n\n- https://docs.aws.amazon.com/global-accelerator/latest/dg/logging-using-cloudtrail.html\n\n### Compliance Information\n  - HIPAA (Legacy): Audit Controls - §164.312(b)\n  - PCI DSS (Legacy): Requirement 10: Track and monitor all access to networkresources and cardholder data\n  - CIS - AWS 1.2.0 (Legacy): Logging 2.1\n  - GDPR: Article 30: Maintain Records of Processing Activities\n  - SOC 2 (Legacy): A1.2, CC5.3, CC6.1\n  - NIST Cybersecurity Framework (Legacy): DE.AE-1, DE.CM-3, ID.AM-1\n  - NIST 800-53 (Legacy): AU-12\n  - ISO 27001 (Legacy): A.10.10.1 - Audit Logging\n  - CSA CCM: AIS-04, BCR-07, BCR-10, BCR-11, IAM-01, IAM-12, IVS-01, IVS-03\n  - NIST 800-53 (Rev 4): AU-12\n  - ISO 27001:2013: A.12.4.1 - Event logging\n  - HIPAA: Audit Controls - § 164.312(b), Information System Activity Review (R) - § 164.308(a)(1)(ii)(e), Security Management Process - § 164.308(a)(1)\n  - CIS - AWS 1.3.0: 3.1\n  - SOC 2: CC7.4, CC7.5\n  - PCI DSS Pack: 10.2, Requirement 10.1\n  - IAM Security (with Access Explorer): Global API Accounting Config records API calls for your account and delivers log files to you.\n  - NIST Cybersecurity Framework: DE.AE-1, DE.CM-1\n  - CIS - AWS 1.4.0: 3.1\n  - IAM Security (without Access Explorer): Global API Accounting Config records API calls for your account and delivers log files to you.\n  - HITRUST v9.4: 1202.09aa1System.1, 1203.09aa1System.2, 1206.09aa2System.23, 1209.09aa3System.2, 1246.09aaCMSSystem.2, 1247.09aaCMSSystem.3, 1250.09aaFTISystem.12, 1253.09aaFTISystem.5, 1258.09aaPCISystem.1, 1281.09aaCISSystem.10, 1296.09aaHIXSystem.1\n  - CIS - AWS 1.5.0: 3.1\n  - NIST 800-53 (Rev 5): AC-2 (4), AC-4 (26), AC-6 (9), AU-2, AU-3, AU-5 (5), AU-6 (3), AU-6 (4), AU-6 (5), AU-7 (1), AU-12, AU-14 (1)\n  - NIST 800-171: 3.3.4, 3.6.1\n  - ACSC Cloud Security Controls Matrix (ISM Sep22): System Monitoring: Event logging and monitoring: Event logging facility: ISM-1405\n  - CSA CCM V4: IAM-06\n  - MITRE Att&ck Mitigation Pack: M1047, M1018",
+        "inserted_at": "2017-12-07T00:07:15Z",
+        "source": "backoffice",
+        "results": 2,
+        "total": 2,
+        "all": 3,
+        "exemptions": 0,
+        "by_type": {
+            "divvyorganizationservice": 2
+        },
+        "by_cloud": {
+            "3": {
+                "total": 1,
+                "count": 1,
+                "all": 1
+            },
+            "4": {
+                "total": 1,
+                "count": 1,
+                "all": 1
+            },
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 1
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T07:55:22.487257",
+        "duration": 0.010836916997504886,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 3,
+        "name": "Airflow Environment Allows Public Access",
+        "description": "Identify airflow environments with a networking configuration that allows access from the world.",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "GCE"
+        ],
+        "supported_iac_clouds": null,
+        "updated_at": "2023-02-20T12:00:00Z",
+        "tags": [],
+        "resource_types": [
+            "airflowenvironment"
+        ],
+        "released": "23.3",
+        "filters": [
+            {
+                "name": "divvy.query.airflow_environment_allows_public_access",
+                "config": {}
+            }
+        ],
+        "notes": "Overview\n----------\n\nApache Airflow service can be used to develop business insights across an organization by combining, enriching, and transforming data through a series of tasks called a workflow. A wide amount of exposure increases the risk of the service being compromised or used in a non-desirable way. When possible, we recommend limiting access to these types of resources.\n\nThis Insight identifies airflow environments which allow access from 0.0.0.0/0.\n\n### Supported Clouds\n\nThis Insight supports the following clouds:\n- Google Cloud Platform\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n- Create a bot from the insight\n- Refine the bot's selection criteria as needed via scope and/or additional filters\n- Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n- Have the bot run daily or upon resource creation/modification\n\n### Remediation Reference Links\n\n* [Configure private IP networking (Cloud Composer 1)](https://cloud.google.com/composer/docs/how-to/managing/configuring-private-ip)\n* [Configure private IP networking (Cloud Composer 2)](https://cloud.google.com/composer/docs/composer-2/configure-private-ip)",
+        "inserted_at": "2023-02-20T12:00:00Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "airflowenvironment": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T07:55:22.474766",
+        "duration": 0.004812624996702652,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [
+            "divvybot:1:1"
+        ],
+        "by_app": {}
+    },
+    {
+        "insight_id": 4,
+        "name": "Instance Has Ephemeral Public IP",
+        "description": "Match instances with an ephemeral public IP address",
+        "severity": 1,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV",
+            "GCE"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2020-01-09T22:22:41Z",
+        "tags": [
+            "networking"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.filter.instance_has_ephemeral_ip",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\n\nCompute instances can have static or dynamic (ephemeral) public IP addresses associated with them. Static addresses will remain intact and persist through lifecycle actions such as stop/start. This can be essential when the resource is used for direct connectivity and does not sit behind a load balancer. Ephemeral addresses will commonly change, and can result in a loss of connectivity to the system if it is routinely stopped/started.\n\nFor some workloads such as web servers this may not represent a true problem. These systems are intended to be ephemeral and in many cases should not have a public IP at all. This Insight can be reconfigured to leverage that tagging policy to identify those mission critical systems which should be updated. It is strongly encouraged to leverage a tagging policy to identify scenarios where this is acceptable.\n\n### Remediation\n\nFor production facing/critical workloads which cannot be taken offline, consider attaching an persistent public iP address. This can be done without taking the machine offline. Be aware that when doing this you may need to update DNS to point to the newly reserved IP address.\n\n### Compliance Information\n  - SOC 2 (Legacy): A1.1, C1.2, C1.3, C1.7, CC5.6\n  - ISO 27001:2013: A.13.1.1 - Network controls, A.9.1.2 - Access to networks and network services, A.9.4.1 - Information access restriction\n  - HIPAA: Access Control - § 164.312(a)(1), Information Access Management - § 164.308(a)(4)\n  - SOC 2: CC6.1, CC6.6\n  - PCI DSS Pack: Requirement 7\n  - NIST Cybersecurity Framework: PR.PT-5\n  - NYDFS NYCCR 500: 500.2.b.1, 500.2.b.2, 500.2.b.3, 500.5.b\n  - NIST 800-171: 3.1.1, 3.1.2, 3.1.3, 3.1.12, 3.1.14, 3.1.20, 3.13.1, 3.13.2\n  - CSA CCM V4: IAM-03, IAM-05, IAM-08, IAM-16, IVS-03, LOG-04, LOG-09\n  - MITRE Att&ck Mitigation Pack: M1015, M1039, M1035, M1030\n  - ISO 27001:2022: 5.15: Access control, 5.18: Access rights, 8.3: Information access restriction, 8.4: Access to source code, 8.20: Network security, 8.22: Segregation of networks\n  - CIS Controls v8: 3.3: Configure Data Access Control Lists, 12.2: Establish and Maintain a Secure Network Architecture",
+        "inserted_at": "2017-12-07T00:07:15Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T07:55:22.468645",
+        "duration": 0.004601374996127561,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 5,
+        "name": "Database Instance Retention Policy Too Low",
+        "description": "Identify database instances with a retention policy that is too low",
+        "severity": 2,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2018-08-05T15:49:22Z",
+        "tags": [
+            "backup/recovery",
+            "best practices",
+            "data retention"
+        ],
+        "resource_types": [
+            "dbinstance"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.query.database_data_retention_policy_at_most",
+                "config": {
+                    "days": 6
+                }
+            }
+        ],
+        "notes": "## Overview\n\nRetention periods for databases should typically include a minimum of seven daily backups. This allows administrators to go back in time for data analysis/retrieval purposes if/when an issue arrises. This insight is provided to surface databases with a retention policy of less than seven. Users can copy this insight to make a custom insight that more appropriately reflects their specific thresholds. Note that databases with automated backups disabled will also be included in the results.\n\n### Remediation\n\n- Increase the database retention period. Note that doing this can result in downtime if done outside of the normal maintenance window. The retention can be set in a manual fashion or automated using the `Set Backup Retention` action.\n\n### Compliance Information\n  - GDPR: Article 30: Maintain Records of Processing Activities\n  - SOC 2 (Legacy): A1.2\n  - NIST Cybersecurity Framework (Legacy): PR.IP-4\n  - NIST 800-53 (Legacy): CP-9\n  - NIST 800-53 (Rev 4): CP-9\n  - ISO 27001:2013: A.12.4.1 - Event logging\n  - CIS - GCP 1.1.0: SQL Server 6.7\n  - SOC 2: A1.2, CC7.4, CC7.5\n  - PCI DSS Pack: Requirement 12.10.1\n  - NIST Cybersecurity Framework: DE.AE-3, ID.BE-5, PR.PT-1\n  - HITRUST v9.4: 1208.09aa3System.1, 1239.09aa1System.4, 19141.06c1Organizational.7\n  - CIS - GCP 1.3.0: SQL Server 6.7\n  - NYDFS NYCCR 500: 500.6.b\n  - ACSC Essential 8: ISM Regular Backups\n  - NIST 800-53 (Rev 5): CP-6, CP-6 (1), CP-6 (2), CP-7, CP-9, CP-10, SI-13 (5)\n  - FFEIC: D5.IR.Pl.B.6 The institution plans to use business continuity, disaster recovery, and data backup programs to recover operations following an incident.\n  - CIS - GCP 2.0.0: SQL Server 6.7\n  - Microsoft Cloud Security Benchmark: LT-6",
+        "inserted_at": "2017-12-07T00:07:15Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "dbinstance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T07:55:22.462750",
+        "duration": 0.002955290998215787,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 6,
+        "name": "Load Balancer Cross Zone Balancing Disabled",
+        "description": "Match load balancers that do not have cross zone balancing enabled",
+        "severity": 2,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2018-02-14T18:50:02Z",
+        "tags": [
+            "best practices"
+        ],
+        "resource_types": [
+            "loadbalancer"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.query.load_balancers_without_zone_balancing",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\n\nCross zone load balancing enables greater redundancy for your balanced resources by ensuring that even if an entire region fails, your application should still be accessible to your users.  When utilized, this insight will identify any resources that are not configured to employ this high availability strategy.\n\n### Remediation\n\nEnable cross-zone load balancing on the resources for which high availability is desired.\n\n### Compliance Information\n  - NIST 800-53 (Rev 4): SC-6\n  - ISO 27001:2013: A.17.1.2 - Implementing information security continuity\n  - HIPAA: Contingency Plan - § 164.308(a)(7), Data Backup Plan (R) - § 164.308(a)(7)(ii)(a)\n  - SOC 2: A1.1\n  - NIST Cybersecurity Framework: PR.PT-5\n  - NIST 800-53 (Rev 5): SC-6, SC-36\n  - NIST 800-171: 3.13.2\n  - ACSC Cloud Security Controls Matrix (ISM Sep22): Networking: Service continuity for online services: Availability planning and monitoring for online services: ISM-1580\n  - CSA CCM V4: BCR-03, IVS-02",
+        "inserted_at": "2017-12-07T00:07:15Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "loadbalancer": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T07:55:22.458522",
+        "duration": 0.0033484170053270645,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    }
+]
