@@ -36,7 +36,8 @@ func (c *Client) GetCloudByID(id any) (Cloud, error) {
 	case int:
 		toCompare = fmt.Sprintf("divvyorganizationservice:%d", v)
 	case string:
-		if match, err := regexp.MatchString(`divvyorganizationservice:\d+`, v); err != nil && match {
+		r, _ := regexp.Compile(`divvyorganizationservice:\d+`)
+		if r.MatchString(v) {
 			toCompare = v
 		} else {
 			return c.GetCloudByName(v)
