@@ -31,7 +31,7 @@ type Cloud struct {
 	RoleArn                     string                     `json:"role_arn"`
 	GroupResourceID             string                     `json:"group_resource_id"`
 	ResourceID                  string                     `json:"resource_id"`
-	EDHRole                     string                     `json:"event_driven_harvesting_role"`
+	EDHRole                     string                     `json:"event_driven_harvest_role"`
 	StrategyID                  int                        `json:"strategy_id"`
 	CloudOrganizationID         string                     `json:"cloud_organization_id,omitempty"`
 	CloudOrganizationDomainName string                     `json:"cloud_organization_domain_name,omitempty"`
