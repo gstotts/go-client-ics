@@ -87,6 +87,6 @@ func (c *Client) updateCloudName(cloud_resource_id, new_name string) (Cloud, err
 	return c.GetCloudByID(cloud_resource_id)
 }
 
-func (c Cloud) Update_Name(new_name string) (Cloud, error) {
+func (c *Cloud) Update_Name(new_name string) (Cloud, error) {
 	return c.client.updateCloudName(c.ResourceID, new_name)
 }
