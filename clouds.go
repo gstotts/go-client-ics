@@ -87,8 +87,16 @@ func (c *Cloud) Update_Name(new_name string) error {
 	}
 	*c, _ = c.client.GetCloudByID(c.ResourceID)
 	return nil
-	// return c.client.GetCloudByID(c.ResourceID)
 }
 
-func (c *Cloud) Update(name string, account_number int, authentication_type, cloud_type, session_name, external_id string) {
+func (c *Cloud) Delete() error {
+	// Deletes the cloud
+
+	err := c.client.makeRequest(http.MethodPost, fmt.Sprintf("/v2/public/cloud/%s/delete", c.ResourceID), nil, nil)
+	if err != nil {
+		return err
+	}
+	// Clear out data in current struct
+	*c = Cloud{}
+	return nil
 }
