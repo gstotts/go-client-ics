@@ -1,0 +1,90 @@
+{
+    "divvy.query.access_analyzer_finding_count": {
+        "filter_id": "divvy.query.access_analyzer_finding_count",
+        "name": "Access Analyzer Finding Count By Type",
+        "description": "Identify access analyzer resources by their finding type/count",
+        "supported_resources": [
+            "accessanalyzer"
+        ],
+        "supports_common": false,
+        "supported_clouds": [
+            "AWS",
+            "AWS_GOV",
+            "AWS_CHINA"
+        ],
+        "settings_config": [
+            {
+                "field_type": "select",
+                "name": "finding_type",
+                "display_name": "Finding Type",
+                "description": "The finding type to validate against",
+                "options": [
+                    "required"
+                ],
+                "choices": [
+                    {
+                        "value": "active_finding_count",
+                        "display_value": "Total Findings"
+                    },
+                    {
+                        "value": "public_finding_count",
+                        "display_value": "Public Access Findings"
+                    },
+                    {
+                        "value": "cross_account_count",
+                        "display_value": "Cross Account Findings"
+                    },
+                    {
+                        "value": "unknown_account_count",
+                        "display_value": "Unknown Account Findings"
+                    }
+                ],
+                "_state_hash": "7198468a46d5f3af5f5c4a86ddee136b"
+            },
+            {
+                "field_type": "int",
+                "name": "finding_count",
+                "display_name": "Finding Count",
+                "description": "The count to search for",
+                "options": [
+                    "required"
+                ],
+                "_state_hash": "e773e59039ca4328c05de65bdabec958"
+            },
+            {
+                "field_type": "select",
+                "name": "operator",
+                "display_name": "Operator",
+                "description": "The operator to use against specified criterion (Defaults to Greater Than Or Equal To)",
+                "options": [],
+                "choices": [
+                    {
+                        "value": "lt",
+                        "display_value": "<"
+                    },
+                    {
+                        "value": "lte",
+                        "display_value": "<="
+                    },
+                    {
+                        "value": "eq",
+                        "display_value": "=="
+                    },
+                    {
+                        "value": "gte",
+                        "display_value": ">="
+                    },
+                    {
+                        "value": "gt",
+                        "display_value": ">"
+                    },
+                    {
+                        "value": "ne",
+                        "display_value": "!="
+                    }
+                ],
+                "_state_hash": "6579b6d595d814869681f2c64ff37f29"
+            }
+        ]
+    }
+}
