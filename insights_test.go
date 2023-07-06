@@ -112,7 +112,14 @@ func TestInsights_QueryInsights(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.Equal(t, tc.expected_insight_count, len(resp))
-				assert.Contains(t, resp, tc.expected_in_results)
+				found_expected_insight := false
+				for _, data := range resp {
+					assert.Contains(t, data.ResourceTypes, tc.resource_types)
+					if data.Name == tc.expected_in_results {
+						found_expected_insight = true
+					}
+				}
+				assert.True(t, found_expected_insight)
 			}
 			teardown()
 		})
