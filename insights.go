@@ -43,3 +43,12 @@ func (c *Client) QueryInsights(detail bool, labels, pack_ids, resource_types str
 	err := c.makeRequest(http.MethodGet, path, nil, &resp)
 	return resp, err
 }
+
+func (c *Client) ListFilters() (map[string]InsightFilter, error) {
+	// Lists all filters available for use in Insights and the config details
+
+	var filterRegistry map[string]InsightFilter
+	err := c.makeRequest(http.MethodGet, "/v2/public/insights/filter-registry", nil, &filterRegistry)
+	return filterRegistry, err
+
+}

@@ -57,3 +57,28 @@ type InsightCounts struct {
 	Results         int                    `json:"results"`
 	Total           int                    `json:"total"`
 }
+
+type InsightFilter struct {
+	ID                 string             `json:"filter_id"`
+	Name               string             `json:"name"`
+	Description        string             `json:"description"`
+	SupportedResources []string           `json:"supported_resources"`
+	SupportsCommon     bool               `json:"supports_common"`
+	SupportedClouds    []string           `json:"supported_clouds"`
+	SettingsConfig     []FilterConfigItem `json:"settings_config"`
+}
+
+type FilterConfigItem struct {
+	FieldType   string                   `json:"field_type"`
+	Name        string                   `json:"name"`
+	DisplayName string                   `json:"display_name"`
+	Description string                   `json:"description"`
+	Options     []string                 `json:"options"`
+	Choices     []FilterConfigItemChoice `json:"choices"`
+	StateHash   string                   `json:"_state_hash"`
+}
+
+type FilterConfigItemChoice struct {
+	Value        string `json:"value"`
+	DisplayValue string `json:"display_value"`
+}
