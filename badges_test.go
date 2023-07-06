@@ -27,7 +27,7 @@ func TestBadges_UpdateCloudBadges(t *testing.T) {
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	err := client.UpdateCloudBadges("divvyorganizationservice:3", []Badge{Badge{Key: "environment", Value: "development"}})
+	err := client.UpdateCloudBadges("divvyorganizationservice:3", []Badge{{Key: "environment", Value: "development"}})
 	assert.NoError(t, err)
 	teardown()
 }
