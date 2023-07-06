@@ -1,0 +1,116 @@
+{
+    "clouds": [
+        {
+            "id": 1,
+            "name": "My GCP",
+            "cloud_type_id": "GCE",
+            "account_id": "gcp",
+            "creation_time": "2023-06-09 05:21:06",
+            "host_assessment_status": [],
+            "host_assessment_enabled": false,
+            "status": "REFRESH",
+            "badge_count": 1,
+            "resource_count": 231,
+            "last_refreshed": "2023-07-05 15:59:51",
+            "role_arn": "insightcloudsec@gcp.iam.gserviceaccount.com",
+            "group_resource_id": "divvyorganizationservice:1",
+            "resource_id": "divvyorganizationservice:1",
+            "event_driven_harvest_role": "idle",
+            "strategy_id": 3
+        },
+        {
+            "id": 3,
+            "name": "AWS Root",
+            "cloud_type_id": "AWS",
+            "account_id": "123456789101",
+            "creation_time": "2023-06-26 23:09:20",
+            "host_assessment_status": [],
+            "host_assessment_enabled": false,
+            "status": "DEFAULT",
+            "badge_count": 1,
+            "resource_count": 233,
+            "last_refreshed": "2023-07-05 15:59:51",
+            "role_arn": "insightcloudsec_sts_assume_role",
+            "group_resource_id": "divvyorganizationservice:3",
+            "resource_id": "divvyorganizationservice:3",
+            "failed_resource_types": [
+                {
+                    "resource_type": "backupgateway",
+                    "permissions": [
+                        "backup-gateway:GetGateway"
+                    ]
+                },
+                {
+                    "resource_type": "elasticcluster",
+                    "permissions": [
+                        "docdb-elastic:GetCluster",
+                        "docdb-elastic:ListClusters"
+                    ]
+                },
+                {
+                    "resource_type": "containercluster",
+                    "permissions": [
+                        "eks:AccessKubernetesApi"
+                    ]
+                },
+                {
+                    "resource_type": "esserverlesscollection",
+                    "permissions": [
+                        "aoss:BatchGetCollection",
+                        "aoss:GetSecurityPolicy",
+                        "aoss:ListCollections",
+                        "aoss:ListSecurityPolicies"
+                    ]
+                },
+                {
+                    "resource_type": "bigdataserverlessnamespace",
+                    "permissions": [
+                        "redshift-serverless:ListNamespaces"
+                    ]
+                },
+                {
+                    "resource_type": "bigdataserverlessworkgroup",
+                    "permissions": [
+                        "redshift-serverless:ListWorkgroups"
+                    ]
+                },
+                {
+                    "resource_type": "businessintelligencesubscription",
+                    "permissions": [
+                        "quicksight:DescribeAccountSettings",
+                        "quicksight:DescribeAccountSubscription",
+                        "quicksight:DescribeIpRestriction",
+                        "quicksight:ListUsers"
+                    ]
+                }
+            ],
+            "event_driven_harvest_role": "idle",
+            "strategy_id": 1,
+            "cloud_organization_id": "o-123asdfasd",
+            "cloud_organization_domain_name": "o-123asdfasd",
+            "cloud_organization_nickname": "Test Org"
+        },
+        {
+            "id": 4,
+            "name": "Development",
+            "cloud_type_id": "AWS",
+            "account_id": "123456789102",
+            "creation_time": "2023-06-26 23:09:22",
+            "host_assessment_status": [],
+            "host_assessment_enabled": false,
+            "status": "DEFAULT",
+            "badge_count": 2,
+            "resource_count": 143,
+            "last_refreshed": "2023-07-05 15:59:51",
+            "role_arn": "insightcloudsec_sts_assume_role",
+            "group_resource_id": "divvyorganizationservice:4",
+            "resource_id": "divvyorganizationservice:4",
+            "event_driven_harvest_role": "idle",
+            "strategy_id": 1,
+            "cloud_organization_id": "o-123asdfasd",
+            "cloud_organization_domain_name": "o-123asdfasd",
+            "cloud_organization_nickname": "Test Org"
+        }
+    ],
+    "total_count": 3
+}

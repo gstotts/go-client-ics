@@ -66,7 +66,7 @@ func (c *Client) ListResourceBadges(resource_id string) ([]Badge, error) {
 }
 
 func (c *Client) ListCloudsWithBadges(b []Badge) ([]BadgedCloud, error) {
-	// Retunrs a list of cloud accounts that are badged
+	// Returns a list of cloud accounts that are badged
 
 	var resp []BadgedCloud
 	var payload Badges
