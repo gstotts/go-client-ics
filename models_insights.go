@@ -1,0 +1,85 @@
+package insightcloudsecClient
+
+import (
+	"time"
+)
+
+type Insight struct {
+	All                    int                    `json:"all,omitempty"`
+	Author                 string                 `json:"author,omitempty"`
+	Bots                   []string               `json:"bots,omitempty"`
+	ByApp                  map[string]int         `json:"by_app,omitempty"`
+	ByCloud                map[int]map[string]int `json:"by_cloud,omitempty"`
+	ByResourceGroup        map[string]int         `json:"by_resource_group,omitempty"`
+	ByType                 map[string]int         `json:"by_type,omitempty"`
+	CacheUpdatedAt         string                 `json:"cache_updated_at,omitempty"`
+	Counts                 InsightCounts          `json:"counts"`
+	Disabled               bool                   `json:"disabled,omitempty"`
+	Description            string                 `json:"description"`
+	Duration               float64                `json:"duration,omitempty"`
+	CustomSeverity         int                    `json:"custom_severity"`
+	Exemptions             int                    `json:"exemptions,omitempty"`
+	Favorited              bool                   `json:"favorited"`
+	Filters                []Filter               `json:"filters"`
+	ID                     int                    `json:"insight_id"`
+	InsertedAt             time.Time              `json:"inserted_at"`
+	Metadata               string                 `json:"meta_data"`
+	Membership             []string               `json:"membership,omitempty"`
+	Name                   string                 `json:"name"`
+	Notes                  string                 `json:"notes"`
+	Released               string                 `json:"released"`
+	ResourceGroupBlacklist []string               `json:"resource_group_blacklist"`
+	ResourceTypes          []string               `json:"resource_types"`
+	Results                int                    `json:"results,omitempty"`
+	RiskLayers             []string               `json:"risk_layers,omitempty"`
+	Severity               int                    `json:"severity"`
+	Source                 string                 `json:"source"`
+	SupportedClouds        []string               `json:"supported_clouds"`
+	SupportedIACClouds     []string               `json:"supported_iac_clouds"`
+	Tags                   []string               `json:"tags"`
+	Total                  int                    `json:"total,omitempty"`
+	UpdatedAt              time.Time              `json:"updated_at"`
+}
+
+type Filter struct {
+	Name        string                 `json:"name"`
+	Config      map[string]interface{} `json:"config"`
+	Collections map[string]interface{} `json:"collections"`
+}
+
+type InsightCounts struct {
+	All             int                    `json:"all"`
+	ByCloud         map[int]map[string]int `json:"by_cloud,omitempty"`
+	ByResourceGroup map[string]int         `json:"by_resource_group"`
+	ByType          map[string]int         `json:"by_type"`
+	CacheUpdatedAt  string                 `json:"cache_updated_at"`
+	Duration        float64                `json:"duration"`
+	Exemptions      int                    `json:"exemptions"`
+	Results         int                    `json:"results"`
+	Total           int                    `json:"total"`
+}
+
+type InsightFilter struct {
+	ID                 string             `json:"filter_id"`
+	Name               string             `json:"name"`
+	Description        string             `json:"description"`
+	SupportedResources []string           `json:"supported_resources"`
+	SupportsCommon     bool               `json:"supports_common"`
+	SupportedClouds    []string           `json:"supported_clouds"`
+	SettingsConfig     []FilterConfigItem `json:"settings_config"`
+}
+
+type FilterConfigItem struct {
+	FieldType   string                   `json:"field_type"`
+	Name        string                   `json:"name"`
+	DisplayName string                   `json:"display_name"`
+	Description string                   `json:"description"`
+	Options     []string                 `json:"options"`
+	Choices     []FilterConfigItemChoice `json:"choices"`
+	StateHash   string                   `json:"_state_hash"`
+}
+
+type FilterConfigItemChoice struct {
+	Value        string `json:"value"`
+	DisplayValue string `json:"display_value"`
+}

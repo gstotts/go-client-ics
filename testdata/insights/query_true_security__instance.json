@@ -1,0 +1,1392 @@
+[
+    {
+        "insight_id": 24,
+        "name": "Instance Exposing Port 80 (HTTP) to the Public",
+        "description": "Identify instances with an attached security group that exposes port 80 (HTTP) to the public (0.0.0.0/0 or ::/0).",
+        "severity": 4,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AZURE_ARM"
+        ],
+        "updated_at": "2022-10-19T12:00:00Z",
+        "tags": [
+            "security",
+            "cis controls"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "22.11",
+        "filters": [
+            {
+                "name": "divvy.query.instances_exposing_specific_ports",
+                "config": {
+                    "ports": [
+                        "80"
+                    ]
+                }
+            }
+        ],
+        "notes": "Overview\n----------\n\nNetwork security groups should be evaluated periodically for port misconfigurations. Where certain ports and protocols may be exposed to the Internet, they should be evaluated for necessity. When deemed necessary, they should be narrowly configured.\n\nThe potential security problem with using HTTP over the Internet is that attackers can use various brute force techniques to gain access to resources. Once the attackers gain access, they can use the resource as a launch point for compromising other resources within the cloud environment.\n\nThis insight identifies instances with an attached security group that exposes port 80 (HTTP) to the public (0.0.0.0/0 or ::/0).\n\n### Supported Clouds\n\nThis Insight supports the following Clouds:\n* Microsoft Azure\n* Microsoft Azure China\n* Microsoft Azure Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n* Create a bot from the insight\n* Refine the bot's selection criteria as needed via scope and/or additional filters\n* Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n* Have the bot run daily or upon resource creation/modification\n\n### CIS Recommended Remediation Steps\n\nWhere HTTP is not explicitly required and narrowly configured for resources attached to the Network Security Group, Internet-level access to your Azure resources\nshould be restricted or eliminated. For internal access to relevant resources, configure an encrypted network tunnel such as:\n\n* ExpressRoute\n* Site-to-site VPN\n* Point-to-site VPN\n\n### Remediation Reference Links\n\n* [Managing Azure Network Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)\n* [Express Route](https://docs.microsoft.com/en-us/azure/expressroute/)\n* [Site-to-Site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-site-to-site-resource-manager-portal)\n* [Point-to-Site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal)\n\n### Compliance Information\n  - ISO 27001:2013: A.13.1.1 - Network controls, A.9.1.2 - Access to networks and network services, A.9.4.1 - Information access restriction\n  - CIS - Azure 1.5.0: 6.4 Ensure that HTTP(S) access from the Internet is evaluated and restricted\n  - FFEIC: D3.PC.IM.B.3 All ports are monitored., D3.PC.IM.B.6 Ports, functions, protocols and services are prohibited if no longer needed for business purposes.\n  - NIST 800-171: 3.1.1, 3.1.2, 3.1.3, 3.1.12, 3.1.14, 3.1.20, 3.13.1, 3.13.2, 3.13.6\n  - CSA CCM V4: IAM-03, IAM-05, IAM-08, IAM-16, IVS-03, LOG-04, LOG-09\n  - Microsoft Cloud Security Benchmark: NS-1, NS-2, NS-9\n  - MITRE Att&ck Mitigation Pack: M1015, M1039, M1037, M1035, M1030\n  - CIS - Azure 2.0: 6.4 Ensure that HTTP(S) access from the Internet is evaluated and restricted\n  - ISO 27001:2022: 5.15: Access control, 5.18: Access rights, 8.3: Information access restriction, 8.4: Access to source code, 8.20: Network security, 8.22: Segregation of networks\n  - CIS Controls v8: 3.3: Configure Data Access Control Lists, 4.6: Securely Manage Enterprise Assets and Software, 12.2: Establish and Maintain a Secure Network Architecture",
+        "inserted_at": "2022-10-19T12:00:00Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {},
+        "by_cloud": {},
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:26.071333",
+        "duration": 0.0,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 33,
+        "name": "Resource with Recent Suspicious Event",
+        "description": "Identify resources with a suspicious event harvested in the past 24 hours. Requires Event-Driven Harvesting on AWS account.",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2022-10-28T14:36:23Z",
+        "tags": [
+            "security"
+        ],
+        "resource_types": [
+            "dbsnapshot",
+            "instance",
+            "loadbalancer",
+            "privateimage",
+            "resourceaccesslist",
+            "serviceaccesskey",
+            "serviceencryptionkey",
+            "servicerole",
+            "snapshot",
+            "storagecontainer",
+            "ssmdocument",
+            "volume"
+        ],
+        "released": "22.11",
+        "filters": [
+            {
+                "name": "divvy.query.resource_with_suspicious_event",
+                "config": {
+                    "unit_type": "hours",
+                    "number_of_units": 24
+                }
+            }
+        ],
+        "notes": "Overview\n----------\n\nEvent-Driven Harvesting (EDH) harvests events in AWS and AWS Govcloud accounts every 60 seconds. Those events are used to make configuration changes locally, trigger bot hookpoints, update insights, and more. One of the features possible with EDH is suspicious event identification by inspecting the payload of the event and examining the changes in context of current cloud state.\n\nCurrently, the following events are inspected immediately for their property changes and how those property changes may affect related resources. For example, `CreateSnapshot` is inspected to see if the snapshot is encrypted. `ModifySnapshotAttribute` is inspected to see if it is shared with an unknown account or made public, etc. More events are added over time.\n```\nAssociateIamInstanceProfile\nAuthorizeSecurityGroupIngress\nAuthorizeSnapshotAccess\nCreateCluster\nCreateDBInstance\nCreateDBSnapshot\nCreateImage\nCreateLoadBalancerListeners\nCreateSnapshot\nDeleteAccountPasswordPolicy\nDeleteAccountPublicAccessBlock\nDeleteBucketPublicAccessBlock\nDeleteFlowLogs\nDeleteTrail\nModifyCluster\nModifyDBClusterSnapshotAttribute\nModifyDBInstance\nModifyDBSnapshotAttribute\nModifyDocumentPermission\nModifyImageAttribute\nModifyLoadBalancerAttributes\nModifySnapshotAttribute\nPutBucketAcl\nPutBucketPublicAccessBlock\nSharedSnapshotCopyInitiated\nSharedSnapshotVolumeCreated\n```\n\n### Supported Clouds\n\nThis Insight supports the following Clouds:\n- AWS\n- AWS Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n- Create a bot from the insight\n- Refine the bot's selection criteria as needed via scope and/or additional filters\n- Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n- Have the bot run daily or upon resource creation/modification\n\n### Remediation Reference Links\n\n* [AWS Event-Driven Harvesting](https://docs.divvycloud.com/docs/event-driven-harvesting-aws)\n* [ICS Suspicious Events](https://docs.divvycloud.com/docs/event-driven-harvesting-reports#suspicious-event-count)\n\n### Compliance Information\n  - FFEIC: D5.DR.De.B.3 Tools and processes are in place to detect, alert, and trigger the incident response program.",
+        "inserted_at": "2022-10-28T14:36:23Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 64,
+        "all": 89,
+        "exemptions": 0,
+        "by_type": {
+            "privateimage": 0,
+            "volume": 0,
+            "snapshot": 0,
+            "instance": 0,
+            "resourceaccesslist": 0,
+            "serviceencryptionkey": 0,
+            "storagecontainer": 0,
+            "servicerole": 0,
+            "dbsnapshot": 0,
+            "loadbalancer": 0,
+            "ssmdocument": 0,
+            "serviceaccesskey": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 34,
+                "count": 0,
+                "all": 34
+            },
+            "4": {
+                "total": 30,
+                "count": 0,
+                "all": 30
+            },
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 25
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:26.002182",
+        "duration": 0.0730848759849323,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 59,
+        "name": "Instance Exposing SSH to the Public",
+        "description": "Identifies Compute Instances Exposing port 22 to the Public",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV",
+            "GCE"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2020-02-25T20:52:43Z",
+        "tags": [
+            "cis controls",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.query.instances_exposing_public_ssh",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\nSecure Shell (SSH) is a protocol for connecting to a remote system using a cryptographically secure connection over what might be an unsecured network. SSH typically uses port 22 on the host system for connections. If the security group rules governing access to an instance leave this port open, it is possible for anyone to attempt to connect to the host system. Therefore it is recommended that connections using SSH only be allowed from trusted networks.\nThis Insight identifies compute instances exposing port 22 to the public.\n\n### Supported Clouds\n\n**This Insight supports the following Clouds:**\n* Alibaba Cloud\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Gov\n* Microsoft Azure, Microsoft Azure China, Microsoft Azure Gov\n* Google Cloud Platform\n\n**This Insight supports the following Clouds for Infrastructure as Code:**\n* Amazon Web Services\n* Microsoft Azure\n* Google Cloud Platform\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n\n## Recommended Remediation\nLeverage Bot automation to identify vulnerable instances and notify the appropriate operations/security teams to review the instance.\n### Bot Recommendations\n* Mark Resource Noncompliant: Flag instances that have SSH open to the public.\n* Send Email/Instant Notification: Notify operations/security team of these instances. Separately, using cloud badges or resource tags to identify owners, notify owners of the actions they need to take.\n### CIS Recommended Remediation Steps\n\n**Microsoft Azure**\n<br>\nDisable direct SSH access to your Azure Virtual Machines from the Internet. After direct SSH access from the Internet is disabled, you have other options you can use to access these virtual machines for remote management:\n - [Point-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal)\n - [Site-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-site-to-site-resource-manager-portal)\n - [ExpressRoute](https://docs.microsoft.com/en-us/azure/expressroute/)\n\n\n### Remediation Reference Links\nFor more information in identifying compute instances exposing port 22 to the public, follow the links below:\n\n**Alibaba Cloud**\n\n- https://www.alibabacloud.com/help/en/doc-detail/25443.html\n\n**Amazon Web Services**\n\n- https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html\n\n**Microsoft Azure**\n\n- https://docs.microsoft.com/en-us/azure/security/fundamentals/network-best-practices#disable-rdpssh-access-to-virtual-machines\n\n**Google Cloud Platform**\n\n- https://cloud.google.com/compute/docs/access\n\n### Compliance Information\n  - PCI DSS (Legacy): Requirement 1: Install and maintain a firewall configuration to protect cardholder data\n  - GDPR: Article 25: Data protection by Design and by Default\n  - SOC 2 (Legacy): C1.1, C1.2, CC5.7\n  - NIST Cybersecurity Framework (Legacy): ID.RA-1, PR.DS-5\n  - NIST 800-53 (Legacy): AC-17\n  - ISO 27001 (Legacy): A.11.4.4 - Remote diagnostic and configuration port protection\n  - FedRAMP CCM 3.0.1: IVS-07\n  - CIS - Azure 1.0.0 (Legacy): Networking 6.2\n  - CIS - Azure 1.1.0: Networking - 6.2 - Ensure that SSH access is restricted from the internet\n  - NIST 800-53 (Rev 4): AC-17, AC-17(1), AC-6, RA-5, SA-17(7), SC-7, SC-8\n  - ISO 27001:2013: A.13.1.1 - Network controls, A.9.1.2 - Access to networks and network services, A.9.4.1 - Information access restriction\n  - HIPAA: Access Control - § 164.312(a)(1), No ePHI Should Be Publicly Accessible\n  - SOC 2: CC5.2, CC6.1, CC6.3, CC6.6\n  - PCI DSS Pack: 6.6, 7.1, 7.2, Requirement 1.3\n  - NIST Cybersecurity Framework: DE.CM-7, PR.AC-3, PR.AC-4, PR.AC-5, PR.DS-5\n  - HITRUST v9.4: 0724.07a3Organizational.4, 0814.01n1Organizational.12, 0818.01w3System.12, 0855.01wCMSOrganizational.2, 0856.01wFTIOrganizational.4, 0857.01wHIXOrganizational.1, 11123.01qPCIOrganizational.3, 1114.01h1Organizational.123, 1117.01j1Organizational.23, 1118.01j2Organizational.124, 11192.01cHIXSystem.2, 1164.01cHIESystem.1, 1165.01cPCISystem.1, 1179.01j3Organizational.1, 1403.05i1Organizational.67, 1424.05j2Organizational.5, 1427.05jFTIOrganizational.3, 1802.08b1Organizational.3, 19141.06c1Organizational.7, 19153.06dFTIOrganizational.12, 19910.06cSROrganizational.2\n  - NYDFS NYCCR 500: 500.2.b.1, 500.2.b.2, 500.2.b.3, 500.5.b, 500.14.a\n  - NIST 800-53 (Rev 5): AC-4, AC-4 (21), AC-6, AC-17, AC-17 (1), AC-21, CM-7, CM-7 (1), SC-7, SC-7 (3), SC-7 (4), SC-7 (5), SC-7 (9), SC-7 (10), SC-7 (11), SC-7 (16), SC-7 (20), SC-7 (21)\n  - NIST 800-171: 3.1.1, 3.1.2, 3.1.2, 3.1.3, 3.1.12, 3.1.14, 3.1.20, 3.4.7, 3.13.1, 3.13.2, 3.13.6\n  - CSA CCM V4: IAM-03, IAM-05, IAM-08, IAM-16, IVS-03, LOG-04, LOG-09\n  - Microsoft Cloud Security Benchmark: NS-1, NS-2, NS-3\n  - MITRE Att&ck Mitigation Pack: M1015, M1039, M1035, M1030\n  - ISO 27001:2022: 5.15: Access control, 5.18: Access rights, 8.3: Information access restriction, 8.4: Access to source code, 8.20: Network security, 8.22: Segregation of networks\n  - CIS Controls v8: 3.3: Configure Data Access Control Lists, 4.6: Securely Manage Enterprise Assets and Software, 12.2: Establish and Maintain a Secure Network Architecture, 12.3: Securely Manage Network Infrastructure",
+        "inserted_at": "2017-12-07T00:07:22Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:25.690824",
+        "duration": 0.022014499998476822,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 70,
+        "name": "Instance Not in Private Network",
+        "description": "Identifies Instances running in simple networking mode such as AWS EC2 Classic.",
+        "severity": 4,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2018-02-13T19:43:46Z",
+        "tags": [
+            "best practices",
+            "hipaa",
+            "networking",
+            "pci",
+            "security",
+            "soc 2"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.filter.instance_uses_simple_networking",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\nLegacy networks such as the AWS EC2 Classic lack support and may not be available based on when the account was created.\n\nThis Insight identifies instances running in simple networking mode such as AWS EC2 Classic.\n\n### Supported Clouds\n\n**This Insight supports the following clouds:**\n\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Gov\n\n**This Insight supports the following Infrastructure as Code clouds:**\n\n* Amazon Web Services\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n## Recommended Remediation\nMove resources to a new VPC (Virtual Private Cloud). Instances and resources within an EC2 Classic network cannot be automatically transferred. Amazon provides documentation on how to migrate to a VPC which can be found in the link below.\n### Bot Recommendations\n* Mark Resource Noncompliant: Flag Instance not in private network.\n* Send Email/Instant Notification: Notify operations/security team of  Instance not in private network. Separately, using cloud badges or resource tags, notify owner of an Instance that is not in private network and the steps required to migrate the Instance to a new VPC.\n\n### Remediation Reference Links\nFor more information on specific steps to identify and remediate instances running in simple networking mode such as AWS EC2 Classic, please follow this link:\n\n* Amazon Web Services - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html\n\n### Compliance Information\n  - SOC 2 (Legacy): C1.1, C1.2, C1.7\n  - NIST Cybersecurity Framework (Legacy): ID.AM-3, PR.AC-5\n  - NIST 800-53 (Legacy): AC-17\n  - ISO 27001 (Legacy): A.10.6.2 - Network security management\n  - FedRAMP CCM 3.0.1: IVS-07\n  - NIST 800-53 (Rev 4): RA-5, SI-2\n  - ISO 27001:2013: A.13.1.1 - Network controls, A.9.1.2 - Access to networks and network services\n  - HIPAA: Access Control - § 164.312(a)(1)\n  - SOC 2: CC6.1\n  - PCI DSS Pack: Requirement 6\n  - NIST Cybersecurity Framework: PR.IP-2\n  - CIS - Alibaba Cloud 1.0.0: 3.1 Ensure legacy networks does not exist\n  - ISO 27001:2022: 8.20: Network security",
+        "inserted_at": "2017-12-07T00:07:23Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:25.600006",
+        "duration": 0.005923708995396737,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 88,
+        "name": "Instance Multi-Tenant (AWS)",
+        "description": "Identifies Compute Instances which are not running on dedicated hardware and are shared with other tenants.",
+        "severity": 4,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2018-02-14T02:37:52Z",
+        "tags": [
+            "best practices",
+            "hipaa",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.query.instance_tenancy",
+                "config": {
+                    "tenancy": "default"
+                }
+            }
+        ],
+        "notes": "## Overview\nMulti-tenancy is not necessarily a non-conformance,  and for most organizational use cases, multi-tenancy compute instances are desired. But, as some workloads require handling of sensitive materials or are subject to regulatory requirements for sensitive data, application owners may prefer the additional degree of separation the dedicated hardware provides from data or access leakage bugs like Spectre and Heartbleed.\n\nThis Insight identifies compute instances which are not running on dedicated hardware and are shared with other tenants.\n\n### Supported Clouds\n\n**This Insight supports the following clouds:**\n\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Gov\n\n**This Insight supports the following Infrastructure as Code clouds:**\n\n* Amazon Web Services\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n## Recommended Remediation\nThere is no automatic migration path from tenanted instances to dedicated.  Dedicated instances will need to be procured, provisioned and applications deployed upon them.\n### Bot Recommendations\n* Using tags, identify Instances that require dedicated Instance hardware (Single Tenant or Dedicated Host).\n*Mark Resource Noncompliant: Flag Instances discovered as Multi-Tenant, that have been tagged as Single-Tenant required as non-conforming Instances.\n* Send Email/Instant Notification: Notify operations/security team of Instance Multi-Tenant required to be Single-Tenant. Separately, using cloud badges or resource tags, notify owner of Instance Multi-Tenant and the steps required to move the Instance from shared tenancy to a single tenancy.\n\n### Remediation Reference Links\nFor more information on specific steps to identify and remediate compute instances which are not running on dedicated hardware and are shared with other tenants, please follow this link:\n\n* Amazon Web Services -\nhttps://docs.aws.amazon.com/autoscaling/ec2/userguide/auto-scaling-dedicated-instances.html\nhttps://aws.amazon.com/premiumsupport/knowledge-center/ec2-shared-tenancy-dedicated-host/\n\n### Compliance Information\n  - PCI DSS Pack: Requirement 2.6",
+        "inserted_at": "2017-12-07T00:07:24Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:25.445492",
+        "duration": 0.0037221250022412278,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 93,
+        "name": "Instance Associated With Default Access List (Security Group)",
+        "description": "Identify Compute Instances that are associated with a default security group. This can be problematic due to the permissiveness of ingress traffic allowed by the default security group.",
+        "severity": 3,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2018-01-24T21:03:29Z",
+        "tags": [
+            "networking",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.query.instance_security_group_associations",
+                "config": {
+                    "association_list": [
+                        "default"
+                    ]
+                }
+            }
+        ],
+        "notes": "Overview\n----------\n\nCloud Networks come with default Access Lists (Security Groups) with initial settings that deny all inbound traffic, allow all outbound traffic, and allow all traffic between instances assigned to the security group. Users often change these settings, however, to make the security groups more permissive. If you don't specify a security group when you launch an instance, the instance is automatically assigned to this default security group, which may have been changed with more permissive settings. As security groups provide stateful filtering of ingress/egress network traffic to cloud resources, it is recommended that all instances are assigned to a specific security group (and that the default security group restrict all traffic).\n\n\n### Remediation\n\nLeverage Bot automation to identify and monitor for Instances associated with default Access Lists (Security Groups). Take automated action to remove default security groups\n\n### Recommend Bot Workflow\n\n - Mark Resource Noncompliant: Mark Instances associated with default Access Lists (Security Groups)\n - Send Email/Slack Notification: Notify operations/security team of Instances associated with default Access Lists (Security Groups). Separately, using cloud badges or resource tags, identify Instance owners and notify them of the steps needed to remove default Access Lists (Security Groups)\n - Modify Security Groups: After providing sufficient time for corrective action, remove the default Access Lists (Security Groups)\n\n### Amazon Web Services\n1. Login to the AWS Management Console at https://console.aws.amazon.com/vpc/home\n2. Repeat the next steps for all VPCs - including the default VPC in each AWS region:\n3. In the left pane, click Security Groups\n4. For each default security group, perform the following:\n   o Select the default security group\n   o Click the Inbound Rules tab\n   o Remove any inbound rules\n   o Click the Outbound Rules tab\n   o Remove any outbound rules\n\n### Compliance Information\n  - CIS - AWS 1.2.0 (Legacy): Networking 4.4\n  - GDPR: Article 25: Data protection by Design and by Default\n  - SOC 2 (Legacy): C1.1, C1.2, C1.7\n  - FedRAMP CCM 3.0.1: IVS-11\n  - NIST 800-53 (Rev 4): AC-17, AC-17(1), AC-6, RA-5, SA-17(7)\n  - ISO 27001:2013: A.13.1.1 - Network controls\n  - HIPAA: Access Control - § 164.312(a)(1)\n  - SOC 2: CC6.1, CC6.3\n  - PCI DSS Pack: Requirement 7\n  - NIST Cybersecurity Framework: PR.AC-4, PR.PT-4\n  - HITRUST v9.4: 11180.01c3System.6, 11201.01cFedRAMPSystem.1\n  - NIST 800-53 (Rev 5): AC-4, AC-4 (21), AC-6, AC-17, AC-17 (1), AC-21, SC-7, SC-7 (3), SC-7 (4), SC-7 (5), SC-7 (9), SC-7 (10), SC-7 (11), SC-7 (16), SC-7 (20), SC-7 (21)\n  - NIST 800-171: 3.1.1, 3.1.2, 3.1.3, 3.1.12, 3.1.14, 3.1.20, 3.4.7, 3.13.1, 3.13.2\n  - CSA CCM V4: IAM-03\n  - MITRE Att&ck Mitigation Pack: M1015, M1039, M1035\n  - ISO 27001:2022: 5.15: Access control, 8.20: Network security",
+        "inserted_at": "2017-12-07T00:07:24Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:25.381450",
+        "duration": 0.006794749999244232,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 96,
+        "name": "Resource Audit Not In Continental US",
+        "description": "Identify resources running in locations outside of the Continental United States (OCONUS)",
+        "severity": 2,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "GCE",
+            "OCI"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2022-06-01T12:43:22Z",
+        "tags": [
+            "best practices",
+            "security"
+        ],
+        "resource_types": [
+            "bigdatainstance",
+            "dbinstance",
+            "instance",
+            "mcinstance",
+            "snapshot",
+            "storagecontainer",
+            "volume"
+        ],
+        "released": "17.06",
+        "filters": [
+            {
+                "name": "divvy.query.resource_not_in_regions",
+                "config": {
+                    "regions_list": [
+                        "us-east-1",
+                        "us-east-2",
+                        "us-west-1",
+                        "us-west-2",
+                        "us-gov-east-1",
+                        "us-gov-west-1",
+                        "centralus",
+                        "eastus",
+                        "eastus2",
+                        "northcentralus",
+                        "southcentralus",
+                        "westcentralus",
+                        "westus",
+                        "westus2",
+                        "westus3",
+                        "nam4",
+                        "us",
+                        "us-central1",
+                        "us-east1",
+                        "us-east4",
+                        "us-east5",
+                        "us-west1",
+                        "us-west2",
+                        "us-west3",
+                        "us-west4",
+                        "us-ashburn-1",
+                        "us-phoenix-1",
+                        "us-sanjose-1"
+                    ]
+                }
+            }
+        ],
+        "notes": "## Overview\n\nEnsuring all cloud resources are within an approved set of regions has a number of benefits.\n\n- Some compliance frameworks require limiting regions to a single country. This insight limits to the Continental United States.\n- Non-standard regions for a company are not frequently monitored. Resources launched in these non-standard regions may incur larger costs if not identified early.\n- Geographic latency may be a primary concern and instances much be located close to their intended network audience.\n\nThe best course of action may be to disable or delete resources after taking an image or snapshot moved to an approved region.\n\n### Supported Clouds\n\nThis Insight supports the following Clouds:\n- ALICLOUD\n- AWS\n- AWS China\n- AWS Gov\n- Microsoft Azure\n- Google\n- Oracle\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n - Create a bot from the insight\n - Refine the bot's selection criteria as needed via scope and/or additional filters\n - Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n - Consider **Scheduled Deletion** preceded by backup actions, if available\n - Have the bot run daily or upon resource creation/modification\n\n### Compliance Information\n  - NIST 800-171: 3.3.1\n  - CSA CCM V4: IAM-12",
+        "inserted_at": "2017-12-07T00:07:25Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 4,
+        "all": 4,
+        "exemptions": 0,
+        "by_type": {
+            "bigdatainstance": 0,
+            "mcinstance": 0,
+            "volume": 0,
+            "snapshot": 0,
+            "instance": 0,
+            "storagecontainer": 0,
+            "dbinstance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 1,
+                "count": 0,
+                "all": 1
+            },
+            "4": {
+                "total": 3,
+                "count": 0,
+                "all": 3
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:25.305781",
+        "duration": 0.046948709001298994,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 114,
+        "name": "Compute Instance Security Group Allows Access From Public IP Space",
+        "description": "Identify instances with an attached security group that has one or more rules from public IP space.",
+        "severity": 3,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "AZURE_GOV",
+            "GCE"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2019-06-11T08:56:00Z",
+        "tags": [
+            "best practices",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "18.1",
+        "filters": [
+            {
+                "name": "divvy.query.instance_allows_public_access_via_sg",
+                "config": {}
+            }
+        ],
+        "notes": "Overview\n----------\n\nSecurity groups control traffic to and from your instance. A security group that allows public access is less secure as it is allowing access to your instance from public IPs. If you want to keep your instances more secure, it is recommended to update traffic rules.\n\n### Remediation\n\nLeverage bot automation to identify and alert about potentially insecure instances so that users can take action such as update security group rules.\n\n### Recommended Bot Workflow\n\n- Mark Resource Noncompliant Flag: Flag instances that have an attached security group with at least one rule from public IP space\n- Send email/Slack Notification: Notify operations/security team of these users.\n\n### Compliance Information\n  - NIST Cybersecurity Framework (Legacy): PR.AC-3\n  - NIST 800-53 (Legacy): SC-28\n  - FedRAMP CCM 3.0.1: IVS-11\n  - NIST 800-53 (Rev 4): AC-17, AC-17(1), AC-6, RA-5, SA-17(7), SC-7, SC-8\n  - ISO 27001:2013: A.13.1.1 - Network controls, A.9.1.2 - Access to networks and network services, A.9.4.1 - Information access restriction\n  - HIPAA: Access Control - § 164.312(a)(1), No ePHI Should Be Publicly Accessible\n  - SOC 2: CC5.2, CC6.1, CC6.3, CC6.6\n  - PCI DSS Pack: 6.6, 7.1, 7.2, Requirement 1.3\n  - NIST Cybersecurity Framework: DE.CM-7, PR.AC-3, PR.AC-4, PR.AC-5, PR.DS-5\n  - HITRUST v9.4: 0724.07a3Organizational.4, 0814.01n1Organizational.12, 0818.01w3System.12, 0855.01wCMSOrganizational.2, 0856.01wFTIOrganizational.4, 0857.01wHIXOrganizational.1, 11123.01qPCIOrganizational.3, 1114.01h1Organizational.123, 1117.01j1Organizational.23, 1118.01j2Organizational.124, 11192.01cHIXSystem.2, 1164.01cHIESystem.1, 1165.01cPCISystem.1, 1179.01j3Organizational.1, 1403.05i1Organizational.67, 1424.05j2Organizational.5, 1427.05jFTIOrganizational.3, 1802.08b1Organizational.3, 19141.06c1Organizational.7, 19153.06dFTIOrganizational.12, 19910.06cSROrganizational.2\n  - NYDFS NYCCR 500: 500.2.b.1, 500.2.b.2, 500.2.b.3, 500.5.b, 500.14.a\n  - NIST 800-53 (Rev 5): AC-4, AC-4 (21), AC-6, AC-17, AC-17 (1), AC-21, SC-7, SC-7 (3), SC-7 (4), SC-7 (5), SC-7 (9), SC-7 (10), SC-7 (11), SC-7 (16), SC-7 (20), SC-7 (21)\n  - NIST 800-171: 3.1.1, 3.1.2, 3.1.3, 3.1.12, 3.1.14, 3.1.20, 3.13.1, 3.13.2\n  - CSA CCM V4: IAM-03, IAM-05, IAM-08, IAM-16, IVS-03, LOG-04, LOG-09\n  - Microsoft Cloud Security Benchmark: NS-1, NS-2\n  - MITRE Att&ck Mitigation Pack: M1015, M1039, M1035, M1030\n  - ISO 27001:2022: 5.15: Access control, 5.18: Access rights, 8.3: Information access restriction, 8.4: Access to source code, 8.20: Network security, 8.22: Segregation of networks\n  - CIS Controls v8: 3.3: Configure Data Access Control Lists, 12.2: Establish and Maintain a Secure Network Architecture",
+        "inserted_at": "2018-02-05T16:01:40Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:25.110358",
+        "duration": 0.028495458005636465,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 116,
+        "name": "Compute Instances With Unencrypted Volumes",
+        "description": "Identify instances having one or more volumes attached which are not encrypted.",
+        "severity": 3,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2018-02-05T16:24:43Z",
+        "tags": [
+            "encryption",
+            "exposed data",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "18.1",
+        "filters": [
+            {
+                "name": "divvy.query.instance_has_unencrypted_volumes",
+                "config": {}
+            }
+        ],
+        "notes": "Overview\n----------\n\nEncryption is a basic need in cloud based applications. Unencrypted volumes can lead to serious data breaches in your compute instances. It is recommended to have volumes be encrypted to protect your instances, data, and applications.\n\n### Remediation\n\nLeverage Bot automation to identify and alert about instances that are attached to an unencrypted volume.\n\n### Recommended Bot Workflow\n\n- Mark Resource Noncompliant Flag: Flag instances that have an attached unencrypted volume\n- Send email/Slack Notification: Notify operations/security team of these instances.\n\n### Compliance Information\n  - NIST 800-53 (Legacy): SC-28\n  - NIST 800-53 (Rev 4): SC-28\n  - ISO 27001:2013: A.10.1.1 - Policy on the use of cryptographic controls\n  - HIPAA: Access Control - § 164.312(a)(1), Encryption And Decryption (a) - § 164.312(a)(2)(Iv)\n  - SOC 2: CC6.1\n  - PCI DSS Pack: Requirement 3\n  - NIST Cybersecurity Framework: PR.DS-1\n  - HITRUST v9.4: 1903.06d1Organizational.3456711, 19141.06c1Organizational.7, 19154.06dFTIOrganizational.3 1132.01v2System.3, 19911.06cSROrganizational.3\n  - NYDFS NYCCR 500: 500.15.a\n  - NIST 800-53 (Rev 5): SC-12, SC-28, SC-28 (1), SC-28 (3), SI-7 (6)\n  - NIST 800-171: 3.5.10, 3.13.8, 3.13.16\n  - ACSC Cloud Security Controls Matrix (ISM Sep22): Cryptography: Cryptographic fundamentals: Encrypting data at rest: ISM-0459\n  - CSA CCM V4: CEK-03, CEK-09, CEK-21, IVS-03\n  - CIS Controls v8: 3.11: Encrypt Sensitive Data at Rest, 11.3: Protect Recovery Data",
+        "inserted_at": "2018-02-05T16:24:43Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:25.048507",
+        "duration": 0.01081575000716839,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 166,
+        "name": "Instance Exposing RDP to the Public",
+        "description": "Identify instances that have RDP access open to the public",
+        "severity": 4,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "ALICLOUD",
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV",
+            "GCE"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2019-09-23T13:47:31Z",
+        "tags": [
+            "best practices",
+            "cis controls",
+            "networking",
+            "remote access",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "18.4",
+        "filters": [
+            {
+                "name": "divvy.query.instances_exposing_public_rdp",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\nThe potential security problem with using RDP over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use your virtual machine as a launch point for compromising other machines on your Azure Virtual Network or even attack networked devices outside of Azure.\n\nThis Insight identifies instances that have RDP access open to the public.\n### Supported Clouds\n\n**This Insight supports the following clouds:**\n\n* Alibaba Cloud\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Gov\n* Microsoft Azure, Microsoft Azure China, Microsoft Azure Gov\n* Google Cloud Platform\n\n\n**This Insight supports the following Infrastructure as Code clouds:**\n\n* Amazon Web Services\n* Microsoft Azure\n* Google Cloud Platform\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n## Recommended Remediation\nDisable RDP access on Network Security Groups from the Internet.\n\n### Bot Recommendations\n*  Mark Resource Noncompliant: Flag Instances with RDP access open to the public.\n* Send Email/Instant Notification: Notify operations/security team of the Instances with RDP open for public access. Separately, using cloud badges, identify cloud account owners and notify them of the steps needed to remove public RDP access by following the CIS manual remediation steps as outlined below.\n\n### CIS Recommended Remediation Steps\n\n**Microsoft Azure**\n\nDisable direct RDP access to your Azure Virtual Machines from the Internet. After direct RDP access from the Internet is disabled, you have other options you can use to access these virtual machines for remote management:\n - [Point-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal)\n - [Site-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-site-to-site-resource-manager-portal)\n - [ExpressRoute](https://docs.microsoft.com/en-us/azure/expressroute/)\n\n### Remediation Reference Links\nFor more information on specific steps to identify and remediate instances that have RDP access open to the public, follow these links:\n\n* Alibaba Cloud - https://www.alibabacloud.com/help/en/doc-detail/96468.html\n\n* Amazon Web Services - https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/authorizing-access-to-an-instance.html\n\n* Microsoft Azure - https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview\n\n* Google Cloud Platform - https://cloud.google.com/compute/docs/instances/access-overview\n\n### Compliance Information\n  - NIST Cybersecurity Framework (Legacy): PR.DS-5\n  - CIS - Azure 1.0.0 (Legacy): Networking 6.1\n  - CIS - Azure 1.1.0: Networking - 6.1 - Ensure that RDP access is restricted from the internet\n  - NIST 800-53 (Rev 4): AC-17, AC-17(1), AC-6, RA-5, SA-17(7), SC-7, SC-8\n  - ISO 27001:2013: A.13.1.1 - Network controls, A.9.1.2 - Access to networks and network services, A.9.4.1 - Information access restriction\n  - HIPAA: Access Control - § 164.312(a)(1), No ePHI Should Be Publicly Accessible\n  - SOC 2: CC5.2, CC6.1, CC6.3, CC6.6\n  - PCI DSS Pack: 6.6, 7.1, 7.2, Requirement 1.3\n  - NIST Cybersecurity Framework: DE.CM-7, PR.AC-3, PR.AC-4, PR.AC-5, PR.DS-5\n  - HITRUST v9.4: 0724.07a3Organizational.4, 0814.01n1Organizational.12, 0818.01w3System.12, 0855.01wCMSOrganizational.2, 0856.01wFTIOrganizational.4, 0857.01wHIXOrganizational.1, 11123.01qPCIOrganizational.3, 1114.01h1Organizational.123, 1117.01j1Organizational.23, 1118.01j2Organizational.124, 11192.01cHIXSystem.2, 1164.01cHIESystem.1, 1165.01cPCISystem.1, 1179.01j3Organizational.1, 1403.05i1Organizational.67, 1424.05j2Organizational.5, 1427.05jFTIOrganizational.3, 1802.08b1Organizational.3, 19141.06c1Organizational.7, 19153.06dFTIOrganizational.12, 19910.06cSROrganizational.2\n  - NYDFS NYCCR 500: 500.2.b.1, 500.2.b.2, 500.2.b.3, 500.5.b, 500.14.a\n  - NIST 800-53 (Rev 5): AC-4, AC-4 (21), AC-6, AC-17, AC-17 (1), AC-21, CM-7, CM-7 (1), SC-7, SC-7 (3), SC-7 (4), SC-7 (5), SC-7 (9), SC-7 (10), SC-7 (11), SC-7 (16), SC-7 (20), SC-7 (21)\n  - NIST 800-171: 3.1.1, 3.1.2, 3.1.3, 3.1.12, 3.1.14, 3.1.20, 3.13.1, 3.13.2\n  - CSA CCM V4: IAM-03, IAM-05, IAM-08, IAM-16, IVS-03, LOG-04, LOG-09\n  - Microsoft Cloud Security Benchmark: NS-2\n  - MITRE Att&ck Mitigation Pack: M1015, M1039, M1035, M1030\n  - ISO 27001:2022: 5.15: Access control, 5.18: Access rights, 8.3: Information access restriction, 8.4: Access to source code, 8.20: Network security, 8.22: Segregation of networks\n  - CIS Controls v8: 3.3: Configure Data Access Control Lists, 12.2: Establish and Maintain a Secure Network Architecture",
+        "inserted_at": "2018-06-07T13:48:10Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:24.403857",
+        "duration": 0.02393929199752165,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 402,
+        "name": "Instance Containing Sensitive Information In User Data (AWS)",
+        "description": "Identifies Compute Instances With User Data Containing Passwords, Private Keys, and/or API Credentials",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2020-11-09T16:13:21Z",
+        "tags": [
+            "best practices",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "20.2",
+        "filters": [
+            {
+                "name": "divvy.query.instance_with_sensitive_user_data",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\nAlthough user data can only be accessed from within the instance itself, the data is not protected by cryptographic methods. Anyone who can access the instance can view its metadata. It should therefore be ensured that sensitive data, such as passwords and SSH keys and API credentials are not stored as user data.\n\nInstance user data is not encrypted and therefore anyone who can access the instance or the console can view it. Therefore, access keys and other secrets should not be stored on the instance.\n\nBy default, the following regular expression is used to identify sensitive data. You can update this setting to identify additional sensitive data strings if desired. Please contact support for information on how to override this option.\n\nThis Insight identifies compute instances with user data that contains passwords, private keys and/or API credentials.\n\n### Supported Clouds\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Government\n\n**This Insight supports the following Infrastructure as Code clouds:**\n* Amazon Web Service\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n## Recommended Remediation\nLeverage Bot automation to identify and monitor for compute instances that contain sensitive user data.\n### Bot Recommendations\n* Mark Resource Noncompliant: Flag compute instances that have been identified as having sensitive user data.\n* Send Email/Instant Notification: Notify operations/security team of the compute instances that contain sensitive user data such as passwords, private keys and/or API credentials. Separately, using cloud badges, identify cloud account owners and notify them of the non-compliant compute instances and the steps required to remove the sensitive data.\n\n### Remediation Reference Links\nFor more information on Identifying compute instances with user data that contains passwords, private keys and/or API credentials, follow this link:\n\n**Amazon Web Services**\n\n- https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data-protection.html\n\n### Compliance Information\n  - ISO 27001:2013: A.8.2.1 - Classification of information\n  - SOC 2: CC6.1\n  - PCI DSS Pack: Requirement 3\n  - NIST Cybersecurity Framework: PR.DS-1\n  - CSA CCM V4: DSP-04, DSP-17",
+        "inserted_at": "2020-03-12T14:20:34Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:22.833995",
+        "duration": 0.006665749999228865,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 564,
+        "name": "Instance Allows use of Vulnerable IMDSv1 Protocol (AWS)",
+        "description": "Identifies AWS EC2 instances that have a role attached and allow use of the vulnerable Instance Metadata Service v1 (IMDSv1) protocol.",
+        "severity": 4,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2022-08-08T12:13:48Z",
+        "tags": [
+            "best practices",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "20.6",
+        "filters": [
+            {
+                "name": "divvy.query.instance_allowed_to_use_imdsv1",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\nWith IMDSv2, every request is now protected by session authentication. A session begins and ends a series of requests that software running on an EC2 instance uses to access the locally-stored EC2 instance metadata and credentials. The software starts a session with a simple HTTP PUT request to IMDSv2. IMDSv2 returns a secret token to the software running on the EC2 instance, which will use the token as a password to make requests to IMDSv2 for metadata and credentials. Unlike traditional passwords, you don’t need to worry about getting the token to the software, because the software gets it for itself with the PUT request. The token is never stored by IMDSv2 and can never be retrieved by subsequent calls, so a session and its token are effectively destroyed when the process using the token terminates. There’s no limit on the number of requests within a single session, and there’s no limit on the number of IMDSv2 sessions. Sessions can last up to six hours and, for added security, a session token can only be used directly from the EC2 instance where that session began.\n\nThis Insight identifies AWS EC2 instances that have a role attached and allow use of the vulnerable Instance Metadata Service v1 (IMDSv1) protocol.\n\n### Supported Clouds\n\n**This Insight supports the following clouds:**\n\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Gov\n\n**This Insight supports the following Infrastructure as Code clouds:**\n\n* Amazon Web Services\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n## Recommended Remediation\nUse IMDSv2 to protect session authentication for every request.\n\n### Bot Recommendations\n* Mark Resource Noncompliant: Flag Instance that allows use of vulnerable IMDSv1 Protocol.\n* Send Email/Instant Notification: Notify operations/security team of Instance that allows use of vulnerable IMDSv1 Protocol. Separately, using cloud badges or resource tags, notify owner of Instance that allows use of vulnerable IMDSv1 Protocol and the steps required to modify the Instance to the preferred IMDSv2 Protocol.\n\n### Remediation Reference Links\nFor more information on specific steps to identify and remediate AWS EC2 instances that have a role attached and allow use of the vulnerable Instance Metadata Service v1 (IMDSv1) protocol, please follow this link:\n\n* Amazon Web Services – https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html\n\n### Compliance Information\n  - ISO 27001:2013: A.13.1.1 - Network controls\n  - NIST Cybersecurity Framework: DE.CM-8, PR.IP-12\n  - HITRUST v9.4: 0616.06hCMSOrganizational.1, 0674.06hFedRAMPOrganizational.1, 1727.03bPCIOrganizational.12\n  - AWS Foundational Security Best Practices: EC2.8\n  - CMMC Level 1: AC.1.001, AC.1.002\n  - ACSC Essential 8: ISM Patch Applications\n  - NIST 800-53 (Rev 5): RA-5\n  - FFEIC: D3.CC.PM.B.1 A patch management program is implemented and ensures that software and firmware patches are applied in a timely manner., D3.CC.PM.B.3 Patch management reports are reviewed and reflect missing security patches.\n  - ACSC Cloud Security Controls Matrix (ISM Sep22): System Management: System administration: Separate privileged operating environments: ISM-1380\n  - CSA CCM V4: TVM-07\n  - ISO 27001:2022: 8.20: Network security, 8.22: Segregation of networks\n  - CIS Controls v8: 12.2: Establish and Maintain a Secure Network Architecture",
+        "inserted_at": "2020-11-07T12:13:48Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:21.622142",
+        "duration": 0.004230750004353467,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 565,
+        "name": "Instance Containing Sensitive Information In User Data Outside of Autoscaling Group (AWS)",
+        "description": "Identifies Compute Instances With User Data That Contains Passwords, Private Keys, and/or API Credentials That Is Not Included in an Autoscaling Group",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2020-11-09T16:14:16Z",
+        "tags": [
+            "best practices",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "20.6",
+        "filters": [
+            {
+                "name": "divvy.query.instance_not_associated_with_autoscaling_group",
+                "config": {}
+            },
+            {
+                "name": "divvy.query.instance_with_sensitive_user_data",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\nAlthough user data can only be accessed from within the instance itself, the data is not protected by cryptographic methods. Anyone who can access the instance can view its metadata. It should therefore be ensured that sensitive data, such as passwords and SSH keys and API credentials are not stored as user data.\n\nInstance user data is not encrypted and therefore anyone who can access the instance or the console can view it. Therefore, access keys and other secrets should not be stored on the instance.\n\nBy default, the following regular expression is used to identify sensitive data. You can update this setting to identify additional sensitive data strings if desired. Please contact support for information on how to override this option.\n\nThis Insight identifies compute instances not members of an autoscaling group with user data that contains passwords, private keys and/or API credentials.\n\n### Supported Clouds\n**This Insight supports the following clouds:**\n* Amazon Web Services, Amazon Web Services China, Amazon Web Services Government\n\n**This Insight supports the following Infrastructure as Code clouds:**\n* Amazon Web Services\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n## Recommended Remediation\nLeverage Bot automation to identify and monitor for compute instances that are not members of an autoscaling group and contain sensitive user data.\n### Bot Recommendations\n* Mark Resource Noncompliant: Flag compute instances that have been identified as having sensitive user data and are not part of an autoscaling group.\n* Send Email/Instant Notification: Notify operations/security team of the compute instances that are not part of an autoscaling group and contain sensitive user data such as passwords, private keys and/or API credentials. Separately, using cloud badges, identify cloud account owners and notify them of the non-compliant compute instances and the steps required to remove the sensitive data.\n\n\n### Remediation Reference Links\nFor more information on Identifying compute instances not members of an autoscaling group with user data that contains passwords, private keys and/or API credentials, follow this link:\n\n**Amazon Web Services**\n\n- https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data-protection.html\n\n### Compliance Information\n  - NIST Cybersecurity Framework: PR.AC-4, PR.DS-1, PR.DS-2",
+        "inserted_at": "2020-11-09T16:13:52Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:21.616347",
+        "duration": 0.01060216699988814,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 805,
+        "name": "Compute Instance With Open Management Interface (OMI) Ports Exposed",
+        "description": "Identify Microsoft Azure Virtual Machines which have a Network Security Group exposing the OMI ports to the World.",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AZURE_ARM"
+        ],
+        "updated_at": "2021-09-14T14:39:30Z",
+        "tags": [
+            "vulnerability",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "21.6",
+        "filters": [
+            {
+                "name": "divvy.query.instances_exposing_omi_ports",
+                "config": {
+                    "any_public_ip": true
+                }
+            },
+            {
+                "name": "divvy.filter.instance_has_eip",
+                "config": {}
+            }
+        ],
+        "notes": "### Overview\n\nOn September 14th, 2021 a new vulnerability dubbed OMIGOD was announced to the public. The new vulnerability impacts Linux virtual machines on Azure. They end up with a little-known service called Open Management Interface (OMI) installed as a byproduct of enabling any of several logging reporting and/or management options in Azure's UI. At worst, the vulnerability in OMI could be leveraged into remote root code execution—although thankfully, Azure's on-by-default, outside-the-VM firewall will limit it to most customers' internal networks only.\n\nOpting in to any of several attractive Azure infrastructure services (such as distributed logging) automatically installs the OMI service inside the Azure virtual machine in question. That service is intended to function much like Microsoft Windows' WMI, enabling collection of logs and metrics as well as some remote management.\n\nPart of the OMI specification requires authentication in order to bind commands and requests to a specific user ID (UID)—but unfortunately, a bug caused malformed requests that omit the authentication stanza entirely to be accepted as though given by the root user itself.\n\nWhen configured for remote management, OMI runs an HTTPS server on port 5986, which can be connected to with a standard HTTPS client like curl and given reasonably human-readable commands in the XML-derived SOAP protocol. In other configurations, OMI only runs on a local Unix socket at /var/opt/omi/run/omiserver.sock, which limits its exploitation to local users only.\n\n### Reference Links\n\nhttps://arstechnica.com/information-technology/2021/09/security-researchers-at-wiz-discover-another-major-azure-vulnerability/\n\n### Compliance Information\n  - ISO 27001:2013: A.13.1.1 - Network controls\n  - HITRUST v9.4: 11204.01lFedRAMPOrganizational.1, 1194.01l2Organizational.2, 1195.01l3Organizational.1\n  - NIST 800-53 (Rev 5): CM-7, CM-7 (1)\n  - FFEIC: D3.PC.IM.B.3 All ports are monitored., D3.PC.IM.B.6 Ports, functions, protocols and services are prohibited if no longer needed for business purposes.\n  - Microsoft Cloud Security Benchmark: NS-1\n  - MITRE Att&ck Mitigation Pack: M1037\n  - ISO 27001:2022: 8.20: Network security, 8.22: Segregation of networks\n  - CIS Controls v8: 12.2: Establish and Maintain a Secure Network Architecture",
+        "inserted_at": "2021-09-14T14:39:30Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {},
+        "by_cloud": {},
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:19.442216",
+        "duration": 0.0,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 806,
+        "name": "Compute Instance Running Vulnerable Version of OMS",
+        "description": "Identify Microsoft Azure Virtual Machines running a vulnerable version of Operations Management Suite (OMS)",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AZURE_ARM"
+        ],
+        "updated_at": "2021-09-20T06:08:30Z",
+        "tags": [
+            "vulnerability",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "21.6",
+        "filters": [
+            {
+                "name": "divvy.query.instance_with_vulnerable_oms_version",
+                "config": {}
+            }
+        ],
+        "notes": "### Overview\n\nOn September 14th, 2021 a new vulnerability dubbed OMIGOD was announced to the public. The new vulnerability impacts Linux virtual machines on Azure. They end up with a little-known service called Open Management Interface (OMI) installed as a byproduct of enabling any of several logging reporting and/or management options in Azure's UI. At worst, the vulnerability in OMI could be leveraged into remote root code execution—although thankfully, Azure's on-by-default, outside-the-VM firewall will limit it to most customers' internal networks only.\n\nOpting in to any of several attractive Azure infrastructure services (such as distributed logging) automatically installs the OMI service inside the Azure virtual machine in question. That service is intended to function much like Microsoft Windows' WMI, enabling collection of logs and metrics as well as some remote management.\n\nPart of the OMI specification requires authentication in order to bind commands and requests to a specific user ID (UID)—but unfortunately, a bug caused malformed requests that omit the authentication stanza entirely to be accepted as though given by the root user itself.\n\nWhen configured for remote management, OMI runs an HTTPS server on port 5986, which can be connected to with a standard HTTPS client like curl and given reasonably human-readable commands in the XML-derived SOAP protocol. In other configurations, OMI only runs on a local Unix socket at /var/opt/omi/run/omiserver.sock, which limits its exploitation to local users only.\n\n### Reference Links\n\nhttps://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-38647\nhttps://github.com/microsoft/OMS-Agent-for-Linux/releases/tag/OMSAgent_v1.13.40-0\n\n### Compliance Information\n  - ACSC Essential 8: ISM Patch Applications\n  - NIST 800-53 (Rev 5): RA-5\n  - FFEIC: D3.CC.PM.B.1 A patch management program is implemented and ensures that software and firmware patches are applied in a timely manner., D3.CC.PM.B.3 Patch management reports are reviewed and reflect missing security patches.\n  - CSA CCM V4: TVM-07\n  - Microsoft Cloud Security Benchmark: PV-6",
+        "inserted_at": "2021-09-20T06:08:30Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {},
+        "by_cloud": {},
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:19.351016",
+        "duration": 0.0,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 1006,
+        "name": "Instance Or Autoscaling Group With Extensions Without Automatic Upgrade Enabled",
+        "description": "Identify instances or autoscaling groups that have extensions without automatic upgrade enabled.",
+        "severity": 5,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AZURE_ARM"
+        ],
+        "updated_at": "2022-08-09T16:39:32Z",
+        "tags": [
+            "security"
+        ],
+        "resource_types": [
+            "instance",
+            "autoscalinggroup"
+        ],
+        "released": "22.4",
+        "filters": [
+            {
+                "name": "divvy.query.instances_with_extensions_without_automatic_upgrade_enabled",
+                "config": {
+                    "extensions": [
+                        "AzureMonitorLinuxAgent",
+                        "AzureMonitorWindowsAgent",
+                        "DSCForLinux",
+                        "DependencyAgentLinux",
+                        "DependencyAgentWindows"
+                    ]
+                }
+            }
+        ],
+        "notes": "## Overview\nAzure Open Management Infrastructure (OMI) Elevation of Privilege Vulnerability (CVE-2022-29149) was released on Jun 14, 2022 . Open Management Infrastructure (OMI) is an open-source Web-Based Enterprise Management (WBEM) implementation for managing Linux and UNIX systems. Azure Virtual Machine (VM) management extensions use this framework to orchestrate configuration management and log collection on Linux VMs. OMI versions v1.6.9-0 and below are vulnerable.\nIn OMI, internal process communication is authenticated by using a key that consists of a random number. The method used to generate the random number can be spoofed by an attacker to manipulate the OMI communications to gain elevated privileges. The attacker must be locally logged in to the machine on which the OMI components are running. In order to fix this vulnerability, you must be on the most up to date VM Management Extension.\nThis insight identifies instances or autoscaling groups that have extensions without automatic upgrade enabled.\n\n## Supported Clouds\n**This Insight supports the following Clouds:**\n* Microsoft Azure, Microsoft Azure China, Microsoft Azure Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n###Remediation\nLeverage Bot automation to identify Instance/Autoscaling Group with Automatic Upgrade Disabled and notify the appropriate operations/security teams to review.\n\n### Remediation Reference Links\n* Microsoft Azure - https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2022-29149\n\n### Compliance Information\n  - CSA CCM V4: AIS-02, AIS-04\n  - MITRE Att&ck Mitigation Pack: M1051\n  - CIS Controls v8: 7.4: Perform Automated Application Patch Management, 10.2: Configure Automatic Anti-Malware Signature Updates",
+        "inserted_at": "2022-08-09T16:39:32Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {},
+        "by_cloud": {},
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:55:16.450690",
+        "duration": 0.0,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 1090,
+        "name": "Resource with Image missing IMDS Support",
+        "description": "Identify instances, autoscaling launch configurations, and launch templates that use a private image that does not support IMDS Version 2.",
+        "severity": 1,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AWS"
+        ],
+        "updated_at": "2022-11-08T16:58:08Z",
+        "tags": [
+            "security"
+        ],
+        "resource_types": [
+            "autoscalinglaunchconfiguration",
+            "instance",
+            "launchtemplate"
+        ],
+        "released": "22.11",
+        "filters": [
+            {
+                "name": "divvy.filter.resource_image_does_not_support_imds",
+                "config": {}
+            }
+        ],
+        "notes": "Overview\n----------\n\nAWS introduced Instance Metadata Service (IMDS) Version 2 as an enhancement to instance metadata access that requires session-oriented requests to add defense in depth against unauthorized metadata access. In 2022, AWS added an `IMDS AMI` property to its private images, Amazon Machine Image (AMI). When set to `IMDSv2 supported`, any instance launched with the AMI will enforce IMDS v2.0 when accessing instance metadata.\n\nThis Insight identifies instances, autoscaling launch configurations, and launch templates that use a private image that does not support IMDS Version 2. IMPORTANT: Resources that use a public image or a deregistered (deleted) private image are not inspected.\n\n### Supported Clouds\n\nThis Insight supports the following clouds:\n- AWS\n- AWS China\n- AWS Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n- Create a bot from the insight\n- Refine the bot's selection criteria as needed via scope and/or additional filters\n- Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n- Have the bot run daily or upon resource creation/modification\n\n### Remediation Reference Links\n\n- [Amazon Machine Images now support Instance Metadata Service Version 2 by default](https://aws.amazon.com/about-aws/whats-new/2022/10/amazon-machine-images-support-instance-metadata-service-version-2-default/)\n- [AWS: Configure the AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-IMDS-new-instances.html#configure-IMDS-new-instances-ami-configuration)",
+        "inserted_at": "2022-11-08T16:58:08Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "autoscalinglaunchconfiguration": 0,
+            "instance": 0,
+            "launchtemplate": 0
+        },
+        "by_cloud": {
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:54:42.187985",
+        "duration": 0.02168162500311155,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 1097,
+        "name": "Instance Adaptive Application Control Policy Allowlist Rules Out Of Date",
+        "description": "Identify instances where Microsoft Defender advises updating their adaptive application control policy allowlist rules.",
+        "severity": 1,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AZURE_ARM"
+        ],
+        "updated_at": "2022-12-12T00:00:00Z",
+        "tags": [
+            "security",
+            "best practices"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "22.12",
+        "filters": [
+            {
+                "name": "divvy.query.adaptive_application_control_policy_should_be_updated",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\n\nMicrosoft Defender for Cloud's adaptive application controls is an automated solution for defining allowlists of known-safe applications for your machines.\nMicrosoft Defender for Cloud uses machine learning to analyze the applications running on your machines and create a list of the known-safe software.\n\n### Supported Clouds\n\n**This Insight supports the following Clouds:**\n * Azure\n * Azure China\n * Azure Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n- Create a bot from the insight\n- Refine the bot's selection criteria as needed via scope and/or additional filters\n- Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n- Have the bot run daily or upon resource creation/modification\n\n### Remediation Reference Links\n- [Respond to the \"Allowlist rules in your adaptive application control policy should be updated\" recommendation](https://learn.microsoft.com/en-us/azure/defender-for-cloud/adaptive-application-controls#respond-to-the-allowlist-rules-in-your-adaptive-application-control-policy-should-be-updated-recommendation)\n\n### Compliance Information\n  - Azure Security: 5\n  - Microsoft Cloud Security Benchmark: NS-7, AM-5",
+        "inserted_at": "2022-12-01T00:00:00Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {},
+        "by_cloud": {},
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:54:42.123761",
+        "duration": 0.0,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 1099,
+        "name": "Virtual Machines Should be Migrated to New Azure Resource Manager Resources",
+        "description": "Match Azure classic compute instances which should be migrated to the newer Azure Resource Manager",
+        "severity": 1,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV"
+        ],
+        "supported_iac_clouds": [
+            "AZURE_ARM"
+        ],
+        "updated_at": "2022-12-07T00:00:00Z",
+        "tags": [
+            "security",
+            "best practices"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "22.12",
+        "filters": [
+            {
+                "name": "divvy.query.vms_should_be_migrated_to_azure_resource_manager",
+                "config": {}
+            }
+        ],
+        "notes": "## Overview\n\nThis insight identifies Azure Virtual Machines (classic) which are now deprecated and these VMs should be migrated to Azure Resource Manager.\n\nAzure Virtual Machines (classic) will be fully retired on March 1, 2023.\n\n### Supported Clouds\n\n**This Insight supports the following Clouds:**\n * Azure\n * Azure China\n * Azure Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n- Create a bot from the insight\n- Refine the bot's selection criteria as needed via scope and/or additional filters\n- Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n- Have the bot run daily or upon resource creation/modification\n- Ensure all classic virtual machines are migrated to Azure Resource Manager before they are fully retired on March 1, 2023\n\n### Remediation Reference Links\n - [Step by step process for migration](https://learn.microsoft.com/en-gb/azure/virtual-machines/classic-vm-deprecation?toc=%2Fazure%2Fvirtual-machines%2Fwindows%2Ftoc.json&bc=%2Fazure%2Fvirtual-machines%2Fwindows%2Fbreadcrumb%2Ftoc.json&WT.mc_id=Portal-Microsoft_Azure_Security)\n - [Details about Azure Resource Manager migration tool](https://learn.microsoft.com/en-gb/azure/virtual-machines/migration-classic-resource-manager-deep-dive?toc=%2Fazure%2Fvirtual-machines%2Fwindows%2Ftoc.json&bc=%2Fazure%2Fvirtual-machines%2Fwindows%2Fbreadcrumb%2Ftoc.json&WT.mc_id=Portal-Microsoft_Azure_Security)\n\n### Compliance Information\n  - Azure Security: 2\n  - Microsoft Cloud Security Benchmark: AM-2",
+        "inserted_at": "2022-12-07T00:00:00Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {},
+        "by_cloud": {},
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:54:42.110930",
+        "duration": 0.0,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 1143,
+        "name": "Instance Configured with Multiple Network Interfaces",
+        "description": "Identify instances that are using multiple network interfaces.",
+        "severity": 1,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV",
+            "GCE"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2023-01-21T00:00:00Z",
+        "tags": [
+            "networking",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "23.2",
+        "filters": [
+            {
+                "name": "divvy.query.instance_network_interface_count",
+                "config": {
+                    "count_ni": 1
+                }
+            }
+        ],
+        "notes": "Overview\n----------\n\nMultiple network instances can cause dual-homed instances, meaning instances that have multiple subnets. This can add network security complexity and introduce unintended network paths and access.\n\nThis Insight identifies instances that are using multiple network interfaces.\n\n### Supported Clouds\n\nThis Insight supports the following clouds:\n- AWS\n- AWS China\n- AWS Gov\n- Google Cloud Platform\n- Microsoft Azure\n- Microsoft Azure China\n- Microsoft Azure Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n- Create a bot from the insight\n- Refine the bot's selection criteria as needed via scope and/or additional filters\n- Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n- Have the bot run daily or upon resource creation/modification\n\n### Remediation Reference Links\n\n* [AWS Multiple IP addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/MultipleIP.html)\n\n### Compliance Information\n  - AWS Foundational Security Best Practices: EC2.17",
+        "inserted_at": "2023-01-21T00:00:00Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:54:41.879746",
+        "duration": 0.009001083002658561,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    },
+    {
+        "insight_id": 1144,
+        "name": "Instance Stopped for 30 Days or Longer",
+        "description": "Identify instances that have been in a stopped state for at least 30 days.",
+        "severity": 3,
+        "custom_severity": null,
+        "meta_data": null,
+        "resource_group_blacklist": null,
+        "supported_clouds": [
+            "AWS",
+            "AWS_CHINA",
+            "AWS_GOV",
+            "AZURE_ARM",
+            "AZURE_CHINA",
+            "AZURE_GOV",
+            "GCE"
+        ],
+        "supported_iac_clouds": [
+            "AWS",
+            "AZURE_ARM",
+            "GCE"
+        ],
+        "updated_at": "2023-01-21T00:00:00Z",
+        "tags": [
+            "networking",
+            "security"
+        ],
+        "resource_types": [
+            "instance"
+        ],
+        "released": "23.2",
+        "filters": [
+            {
+                "name": "divvy.filter.instance_state_time_threshold",
+                "config": {
+                    "unit_type": "days",
+                    "instance_state": "stopped",
+                    "number_of_units": 24
+                }
+            }
+        ],
+        "notes": "Overview\n----------\n\nThis control checks whether any EC2 instances have been stopped for more than the allowed number of days. An EC2\ninstance fails this check if it is stopped for longer than the maximum allowed time period, which by default is 30 days.\n\nA failed finding indicates that an EC2 instance has not run for a significant period of time. This creates a security\nrisk because the EC2 instance is not being actively maintained (analyzed, patched, updated). If it is later launched,\nthe lack of proper maintenance could result in unexpected issues in your AWS environment. To safely maintain an EC2\ninstance over time in a nonrunning state, start it periodically for maintenance and then stop it after maintenance.\n\nThis Insight identifies instances that have been in a stopped state for at least 30 days.\n\n### Supported Clouds\n\nThis Insight supports the following clouds:\n- AWS\n- AWS China\n- AWS Gov\n- Google Cloud Platform\n- Microsoft Azure\n- Microsoft Azure China\n- Microsoft Azure Gov\n\nSupported clouds are specific to this Insight and may vary for any associated filter(s).\n\n### Bot Notification and/or Remediation Workflow\n\n- Create a bot from the insight\n- Refine the bot's selection criteria as needed via scope and/or additional filters\n- Mark those identified resources **Noncompliant** and add an action to notify resource owners based upon resource tags and/or cloud badges\n- Consider adding the bot action **Scheduled Deletion** if the instance is no longer needed\n- Have the bot run daily or upon resource creation/modification\n\n### Remediation Reference Links\n\n* [AWS Instance lifecycle](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html)\n\n### Compliance Information\n  - AWS Foundational Security Best Practices: EC2.4",
+        "inserted_at": "2023-01-21T00:00:00Z",
+        "source": "backoffice",
+        "results": 0,
+        "total": 0,
+        "all": 0,
+        "exemptions": 0,
+        "by_type": {
+            "instance": 0
+        },
+        "by_cloud": {
+            "1": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "3": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            },
+            "4": {
+                "total": 0,
+                "count": 0,
+                "all": 0
+            }
+        },
+        "by_resource_group": {},
+        "cache_updated_at": "2023-07-03T08:54:41.868776",
+        "duration": 0.009337542003777344,
+        "author": "InsightCloudSec",
+        "favorited": false,
+        "bots": [],
+        "by_app": {}
+    }
+]
